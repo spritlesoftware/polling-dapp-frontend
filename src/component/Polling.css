@@ -79,32 +79,26 @@ form {
 	box-shadow: 0 0 5px rgba(0, 80, 80, .4);
 	border-radius: 4px;
 }
-
-.btn:hover,
-.btn:focus {
-	background-color: #800000;
-	color: #fff;
+.card {
+	height: 90% !important;
 }
 
 .btn {
 	transition: all .5s ease;
 	width: 70%;
 	border-radius: 30px;
-	color: #010101;
 	font-weight: 600;
-	background-color: white;
-	border: 1px solid #040405;
 	margin-top: 1.5em;
 	margin-bottom: 1em;
 	margin-left: 15%;
 }
 
-.radio {
-	padding-left: 43%;
-}
-
 .form-check {
 	text-align: left;
+    border: 1px solid black;
+    margin-top: 5%;
+    border-radius: 6px;
+    line-height: 1.8;
 }
 
 .option-btn {
@@ -128,9 +122,18 @@ form {
 .submit {
 	border: 2Px !important;
 	border-radius: 8px !important;
-	width: 22% !important;
-	background-color: lightslategrey;
-	color: currentcolor;
-	margin-top: 5%;
-	margin-left: 78%;
+	width: 27% !important;
+	margin-top: 8%;
+	margin-left: 70%;
+}
+
+.radio{
+	border-radius: 50%;
+    margin-top: 7px;
+    margin-left: -19px;	
+}
+.form-check .form-check-input {
+	float: left;
+    margin-left: -11px !important;
+    margin-right: 6px;
 }

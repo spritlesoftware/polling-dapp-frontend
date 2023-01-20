@@ -31,7 +31,7 @@ function Card({ questions }: { questions: { ques: string, date: string, vote: nu
                                  </div>
                               </div>
                            </div>
-                           <div className="mt-5">   <h3 className="heading">{element.ques}</h3>
+                           <div className="mt-5 ">   <h6 className="heading ">{element.ques}</h6>
 
                               <div className="mt-5">
                                  <progress id="file" value={element.vote} max="100"></progress>

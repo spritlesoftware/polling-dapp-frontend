@@ -14,6 +14,7 @@ import Vote from "./assets/yellow.jpg"
 
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
+
 function App() {
   const poll_question: {
     poll_question: {
@@ -22,13 +23,10 @@ function App() {
       option2: string;
       date: string;
       vote: number;
-    }[], userDetails: { username: string; usermail: string; rpc: any }
-  } = useContext(PollingContext);
+    }[], userDetails: { username: string; usermail: string; rpc: any }} = useContext(PollingContext);
+  
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  // const PollContext = useContext(PollingContext)
-  // const{userDetails,setUserDetails}=useContext(PollingContext)
-
 
   const [alert, setAlert] = useState({
     header: 'header',
@@ -66,7 +64,6 @@ function App() {
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
             chainId: "0x5",
-            // rpcTarget: "https://goerli.infura.io/v3/",
           },
           uiConfig: {
             loginMethodsOrder: ["google"],
@@ -92,9 +89,6 @@ function App() {
         });
         web3auth.configureAdapter(openloginAdapter);
         setWeb3auth(web3auth);
-
-
-
         await web3auth.initModal({
           modalConfig: {
             [WALLET_ADAPTERS.OPENLOGIN]: {
@@ -157,7 +151,6 @@ function App() {
                   showOnModal: false
                 }
               },
-              // setting it to false will hide all social login methods from modal.
               showOnModal: true,
             },
             [WALLET_ADAPTERS.METAMASK]: {
@@ -194,53 +187,24 @@ function App() {
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
 
-    let userDetails = {
-      username: "",
-      usermail: "",
-      rpc: {}
-    };
-    // -------- //
+    // let userDetails = {
+    //   username: "",
+    //   usermail: "",
+    //   rpc: {}
+    // };
+ 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
 
-    userDetails.username = user_name;
-    userDetails.usermail = user.email ? user.email : "-";
+    poll_question.userDetails.username = user_name;
+    console.log(user_name,"username")
+    poll_question.userDetails.usermail = user.email ? user.email : "-";
 
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
       balance = await rpc.getBalance();
-      userDetails.rpc = rpc;
-      // console.log("RPC",rpc);
-
-      //***********START */
-      /*var myHeaders = new Headers();
-      myHeaders.append("Authorization", "Bearer e4ebae7f8a55e13bd9a967f45f60b8671ba27511bec9598364b65d9c440e693a6a299331018c1285a88044166ffa9baedda0bcbc5114b8a3629af80af875f225a9f494474172c3eca759ac287976ddd806bd5aa57883aa75394cda1a0677b555f9d0852818d34be2539ca1a2c2de1deab2a5e53156b30e986878b5659a40ffad");
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify({
-        "localUser": false,
-        "user": {
-          "username": user_name,
-          "usermail": user.email,
-          "publickey": String(await rpc.getAccounts()),
-          "privatekey": await rpc.getPrivateKey(),
-        }
-      });
-
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw
-      };
-
-      fetch("http://192.168.1.52:1337/api/signerInit", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log("==== " + result))
-        .catch(error => console.log('==== error', error));*/
-      //***********END ***/
+      poll_question.userDetails.rpc = rpc;
     }
-
-    // onShowAlert("success", "Name: " + user_name + ", Balance: " + balance, "User Details");
   };
 
   const getUserInfo = async () => {
@@ -324,43 +288,6 @@ function App() {
 
   const loggedInView = (
     <>
-      {/* <div className="alert">
-        <Alert
-          header={alert.header}
-          btnText={'Close'}
-          text={alert.text}
-          type={alert.type}
-          show={alert.show}
-          onClosePress={onCloseAlert}
-          pressCloseOnOutsideClick={true}
-          showBorderBottom={false}
-          alertStyles={{}}
-          headerStyles={{}}
-          textStyles={{}}
-          buttonStyles={{}}
-        />
-      </div> */}
-      {/* <button onClick={getUserInfo} className="card">
-        Get User Info
-      </button>
-      <button onClick={getChainId} className="card">
-        Get Chain ID
-      </button>
-      <button onClick={getAccounts} className="card">
-        Get Accounts
-      </button>
-      <button onClick={getBalance} className="card">
-        Get Balance
-      </button>
-      <button onClick={sendTransaction} className="card">
-        Send Transaction
-      </button>
-      <button onClick={signMessage} className="card">
-        Sign Message
-      </button>
-      <button onClick={getPrivateKey} className="card">
-        Get Private Key
-      </button> */}
       <div></div>
       <div className="row card-logout">
         <div className="col-6">
@@ -369,11 +296,9 @@ function App() {
         <div className="col-6">
           <button onClick={logout} className="logout-btn">Logout</button>
         </div>
-
       </div>
 
       <Card questions={poll_question.poll_question} />
-
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div>
@@ -381,7 +306,6 @@ function App() {
   );
 
   const unloggedInView = (
-
     <div className="container-fluid cardpg">
       <div className="row">
         <div className="col-lg-6 first">
@@ -390,7 +314,6 @@ function App() {
           <p className="company_title text">Make your vote count!
           </p>
           <p className="vote1">Feel proud to be a voter anywhere, be ready to vote!</p>
-
         </div>
         <div className="col-lg-6 login" >
           <img src={PollLogo} alt="PollLogo " className="poll-img second" />
@@ -402,7 +325,7 @@ function App() {
           </p>
           <p className="welcome1">The real power is to vote!</p>
           <div className="login-para">
-            <input type="button" value="Login" onClick={() => { login() }} className=" btn btn-primary btn login-btn"></input>
+            <input type="button" value="Login" onClick={() => { login() }} className=" btn btn-primary submit1 "></input>
           </div>
         </div>
       </div>
@@ -412,9 +335,7 @@ function App() {
   return (
     <>
       <div>
-        {/* </div>  <div className="container-fluid"> */}
         {provider ? loggedInView : unloggedInView}
-
       </div>
     </>
   );

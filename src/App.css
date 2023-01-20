@@ -98,9 +98,12 @@
 
 .thankyou-wrapper {
   width: 100%;
+  width: 100%;
   margin: auto;
+  top: 50%;
+  transform: translate(0, -50%);
+  position: absolute;
   background: #ffffff;
-  height: 100vh !important;
   padding: 5px;
   display: flex;
   flex-direction: column;
@@ -248,19 +251,18 @@ form {
   width: 50px;
 }
 
-.btn {
+/* .btn {
   transition: all .5s ease;
   width: 70%;
   border-radius: 30px;
-  /* color:#008080; */
+
   font-weight: 600;
-  /* background-color: #fff; */
-  /* border: 1px solid #008080; */
+ 
   margin-top: 1.5em;
   margin-bottom: 1em;
   color: whitesmoke;
 
-}
+} */
 
 .btn:hover,
 .btn:focus,
@@ -438,4 +440,20 @@ form {
 
 .card-logout {
   width: 101%;
+}
+.submit2 {
+  border: 2Px !important;
+	border-radius: 8px !important;
+	width: 12% !important;
+	margin-top: 8%;
+	margin-left: 72%;
+  margin-left: 0% !important;
+}
+
+.login-btn{
+  border: 2Px !important;
+	border-radius: 8px !important;
+	width: 30% !important;
+	margin-top: 8%;
+	margin-left: 72%;
 }

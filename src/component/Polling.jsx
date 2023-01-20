@@ -41,19 +41,29 @@ function Polling(index) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-5">   <h3 className="heading">{element.ques}</h3>
+                                <div className="mt-5">   <h6 className="heading">{element.ques}</h6>
 
-                                    <div className="mt-5">
-                                        <button type="button" class="btn option-btn">{element.option1}</button>
-                                        <button type="button" class="btn option-btn">{element.option2}</button>
-
+                                <div class="form-check">
+  <input class="form-check-input radio" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked/>
+  <label class="form-check-label" for="exampleRadios1">
+    {element.option1}
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input radio" type="radio" name="exampleRadios" id="exampleRadios2" value="option2"/>
+  <label class="form-check-label" for="exampleRadios2">
+    {element.option2}
+  </label>
+  
+</div>
+<button type="button" className="btn btn-primary submit" onClick={thank}>Submit</button>
                                     </div>
 
                                 </div>
-                                <button type="button" className="btn-dark submit" onClick={thank}>Submit</button>
+                              
                             </div>
 
-                        </div>
+                    
                     )
                 }
                 )
