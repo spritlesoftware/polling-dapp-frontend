@@ -1,26 +1,22 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState,useContext } from "react";
 import Alert from 'react-popup-alert'
 import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS, CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import RPC from "./web3RPC"
-import "./App.css";
-import Card from "./component/card";
-import { PollingContext } from "./Listcontext/listcontext";
-import SpritleLogo from "./assets/spritle_logo.png"
-import PollLogo from "./assets/votelogo.png"
-import logins from "./assets/login.png"
-import Vote from "./assets/yellow.png"
+import RPC from "../web3RPC";
+import "../App.css";
+import Card from "../component/card";
+import {Routes,Route} from "react-router-dom"
+import { PollingContext } from "../Listcontext/listcontext";
+import Polling from "../component/Polling";
 
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
-function App() {
-  const poll_question: { ques: string, date: string, vote: number ,option1:string, option2:string}[] = useContext(PollingContext);
+function HomePage() {
+  const poll_question: {ques:string,date:string,vote:number}[] = useContext(PollingContext);
+  console.log(poll_question,".........................................")
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  const PollContext = useContext(PollingContext)
-  // const{userDetails,setUserDetails}=useContext(PollingContext)
-
 
   const [alert, setAlert] = useState({
     header: 'header',
@@ -69,23 +65,31 @@ function App() {
         const openloginAdapter = new OpenloginAdapter({
           adapterSettings: {
             network: "testnet",
-            uxMode: "popup",
+            uxMode: "popup",  
             loginConfig: {
-
+              // Add login configs corresponding to the providers on modal
+              // Google login
               google: {
                 name: "Custom Auth Login",
                 verifier: "spritle-google-testnet",
                 typeOfLogin: "google",
                 clientId: "855467495955-rlbt9fnev9r80j0h0848k05rov9hctmj.apps.googleusercontent.com",
               },
-
+              // Facebook login
+              /*facebook: {
+                name: "Custom Auth Login",
+                verifier: "YOUR_FACEBOOK_VERIFIER_NAME", // Please create a verifier on the developer dashboard and pass the name here
+                typeOfLogin: "facebook", // Pass on the login provider of the verifier you've created
+                clientId: "FACEBOOK_CLIENT_ID_1234567890", // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
+              },*/
+              // Add other login providers here
             },
           },
         });
         web3auth.configureAdapter(openloginAdapter);
         setWeb3auth(web3auth);
 
-
+        // await web3auth.initModal();
 
         await web3auth.initModal({
           modalConfig: {
@@ -186,23 +190,16 @@ function App() {
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
 
-    let userDetails = {
-      username: "",
-      usermail: "",
-      rpc: {}
-    };
+    console.log(web3authProvider);
+
     // -------- //
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
 
-    userDetails.username = user_name;
-    userDetails.usermail = user.email ? user.email : "-";
-
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
       balance = await rpc.getBalance();
-      userDetails.rpc = rpc;
-      // console.log("RPC",rpc);
+      console.log("RPC",rpc)
 
       //***********START */
       /*var myHeaders = new Headers();
@@ -232,7 +229,7 @@ function App() {
       //***********END ***/
     }
 
-    // onShowAlert("success", "Name: " + user_name + ", Balance: " + balance, "User Details");
+    onShowAlert("success", "Name: " + user_name + ", Balance: " + balance, "User Details");
   };
 
   const getUserInfo = async () => {
@@ -242,7 +239,7 @@ function App() {
     }
     const user = await web3auth.getUserInfo();
     if (user.name)
-      onShowAlert('success', "Name: " + user.name, "User Details");
+        onShowAlert('success', "Name: " + user.name, "User Details");
   };
 
   const logout = async () => {
@@ -316,7 +313,8 @@ function App() {
 
   const loggedInView = (
     <>
-      {/* <div className="alert">
+     
+      <div className="alert">
         <Alert
           header={alert.header}
           btnText={'Close'}
@@ -331,7 +329,7 @@ function App() {
           textStyles={{}}
           buttonStyles={{}}
         />
-      </div> */}
+      </div>
       {/* <button onClick={getUserInfo} className="card">
         Get User Info
       </button>
@@ -353,19 +351,12 @@ function App() {
       <button onClick={getPrivateKey} className="card">
         Get Private Key
       </button> */}
-      <div></div>
-      <div className="row card-logout">
-    <div className="col-6">
-          <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
-    </div>
-    <div className="col-6">
-          <button onClick={logout} className="logout-btn">Logout</button>  
-    </div>
-    
-  </div>
-          
       <Card questions={poll_question} />
- 
+      {/* <Polling question={poll_question} /> */}
+      <button onClick={logout} className="card">
+        Log Out
+      </button>
+
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div>
@@ -373,37 +364,32 @@ function App() {
   );
 
   const unloggedInView = (
-
-    <div className="container-fluid cardpg">
-      <div className="row">
-        <div className="col-lg-6 first">
-          <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo" />
-          <img src={Vote} alt="PollLogo " className="yellow" />
-          <p className="company_title text">Have a vision? Make the correct Decision</p>
-          <p className="vote1">There’s no such thing as a vote that doesn’t matter. It all matters.</p>
-
-        </div>
-        <div className="col-lg-6 login" >
-            <img src={PollLogo} alt="PollLogo " className="poll-img second" />
-                 <p className="welcome">Welcome!</p>
-                 <p className="welcome1">It's not enough to just want change ... You have to go and make change by voting.</p>
-            <div className="login-para">
-            <input type="button" value="Login" onClick={() => { login() }} className=" btn btn-primary btn login-btn"></input>
-          </div>
-        </div>
-      </div>
-    </div>
+    <button onClick={login} className="card">
+      Login
+    </button>
   );
 
   return (
     <>
-      <div>
-      {/* </div>  <div className="container-fluid"> */}
-          {provider ? loggedInView : unloggedInView}
-        
-      </div>
+    
+    <div className="container">
+     
+      <h1 className="title">
+        <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
+          Web3Auth 
+        </a>
+          &nbsp;with ReactJS Example
+      </h1>
+
+      {/* <div className="grid">{provider ? loggedInView : unloggedInView}</div> */}
+      
+      
+    </div>
+
+
+  
     </>
   );
 }
 
-export default App;
+export default HomePage;
