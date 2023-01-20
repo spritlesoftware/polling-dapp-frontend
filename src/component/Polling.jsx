@@ -6,7 +6,8 @@ import { PollingContext } from "../Listcontext/listcontext";
 import { useLocation } from "react-router-dom";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import SpritleLogo from "../assets/spritle_logo.png"
+import SpritleLogo from "../assets/spritle_logo.png";
+
 const vote = 0
 function Polling(index) {
     const navigate = useNavigate();
@@ -25,24 +26,33 @@ function Polling(index) {
             <> {
                 options.map((element) => {
                     return (
-                        <div>
-                            <p className="para">{element.ques}</p>
-                            <div className="radio">
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                    <label className="form-check-label" for="flexRadioDefault1">
-                                        {element.option1}
-                                    </label>
+                        <div> <div className="col-6">
+                            <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
+                        </div>
+                            <div className="col-6">
+                                {/* <button onClick={logout} className="logout-btn">Logout</button>   */}
+                            </div>
+                            <div className="card p-3 mb-2 ques-card"  >
+                                <div className="d-flex justify-content-between">
+                                    <div className="d-flex flex-row align-items-center">
+                                        <div className="ms-2 c-details">
+
+
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked />
-                                    <label className="form-check-label" for="flexRadioDefault2">
-                                        {element.option2}
-                                    </label>
+                                <div className="mt-5">   <h3 className="heading">{element.ques}</h3>
+
+                                    <div className="mt-5">
+                                        <button type="button" class="btn option-btn">{element.option1}</button>
+                                        <button type="button" class="btn option-btn">{element.option2}</button>
+
+                                    </div>
 
                                 </div>
+                                <button type="button" className="btn-dark submit" onClick={thank}>Submit</button>
                             </div>
-                            <button type="button" className="btn btn-dark" onClick={thank}>Submit</button>
+
                         </div>
                     )
                 }
@@ -54,11 +64,7 @@ function Polling(index) {
     return (
         <div>
             <div class="container-fluid">
-                {/* <div class="row main-content bg-success text-center"> */}
-                {/* <div class="col-md-4 text-center company__info"> */}
-                {/* <img src={ SpritleLogo} alt="spritlelogo"/> */}
             </div>
-            {/* <div class="col-md-8 col-xs-12 col-sm-12 login_form "> */}
             <div class="container-fluid">
                 <div class="row">
                 </div>

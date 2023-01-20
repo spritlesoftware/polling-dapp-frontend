@@ -10,18 +10,20 @@ import { PollingContext } from "./Listcontext/listcontext";
 import SpritleLogo from "./assets/spritle_logo.png"
 import PollLogo from "./assets/votelogo.png"
 import logins from "./assets/login.png"
-import Vote from "./assets/yellow.png"
+import Vote from "./assets/yellow.jpg"
 
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
 function App() {
-  const poll_question: {poll_question: {
-    ques: string;
-    option1: string;
-    option2: string;
-    date: string;
-    vote: number;
-}[], userDetails: {username:string;usermail:string;rpc:any}} = useContext(PollingContext);
+  const poll_question: {
+    poll_question: {
+      ques: string;
+      option1: string;
+      option2: string;
+      date: string;
+      vote: number;
+    }[], userDetails: { username: string; usermail: string; rpc: any }
+  } = useContext(PollingContext);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
   // const PollContext = useContext(PollingContext)
@@ -361,17 +363,17 @@ function App() {
       </button> */}
       <div></div>
       <div className="row card-logout">
-    <div className="col-6">
+        <div className="col-6">
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
-    </div>
-    <div className="col-6">
-          <button onClick={logout} className="logout-btn">Logout</button>  
-    </div>
-    
-  </div>
-          
+        </div>
+        <div className="col-6">
+          <button onClick={logout} className="logout-btn">Logout</button>
+        </div>
+
+      </div>
+
       <Card questions={poll_question.poll_question} />
- 
+
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div>
@@ -385,15 +387,21 @@ function App() {
         <div className="col-lg-6 first">
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo" />
           <img src={Vote} alt="PollLogo " className="yellow" />
-          <p className="company_title text">Have a vision? Make the correct Decision</p>
-          <p className="vote1">There’s no such thing as a vote that doesn’t matter. It all matters.</p>
+          <p className="company_title text">Make your vote count!
+          </p>
+          <p className="vote1">Feel proud to be a voter anywhere, be ready to vote!</p>
 
         </div>
         <div className="col-lg-6 login" >
-            <img src={PollLogo} alt="PollLogo " className="poll-img second" />
-                 <p className="welcome">Welcome!</p>
-                 <p className="welcome1">It's not enough to just want change ... You have to go and make change by voting.</p>
-            <div className="login-para">
+          <img src={PollLogo} alt="PollLogo " className="poll-img second" />
+          <p className="welcome">Welcome!</p>
+          <p className="welcome1">If you don't vote, you can't complain!
+          </p>
+          <p className="welcome1">
+            Vote! Let your voice be heard!
+          </p>
+          <p className="welcome1">The real power is to vote!</p>
+          <div className="login-para">
             <input type="button" value="Login" onClick={() => { login() }} className=" btn btn-primary btn login-btn"></input>
           </div>
         </div>
@@ -404,9 +412,9 @@ function App() {
   return (
     <>
       <div>
-      {/* </div>  <div className="container-fluid"> */}
-          {provider ? loggedInView : unloggedInView}
-        
+        {/* </div>  <div className="container-fluid"> */}
+        {provider ? loggedInView : unloggedInView}
+
       </div>
     </>
   );

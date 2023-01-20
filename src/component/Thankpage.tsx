@@ -1,26 +1,33 @@
 import React from "react";
 import '../App.css'
-function Thankpage(){
-    return(
+import thanks from "../assets/thanks1.png"
+import { useNavigate } from "react-router-dom";
+function Thankpage() {
+    var navigate = useNavigate()
+    return (
         <>
-        <section className="login-main-wrapper">
-      <div className="main-container">
-          <div className="login-process">
-              <div className="login-main-container">
-                  <div className="thankyou-wrapper">
-                      <h1><img src="http://montco.happeningmag.com/wp-content/uploads/2014/11/thankyou.png"  className="image" alt="thanks" /></h1>
-                        <p className="img-para">for contacting us, we will get in touch with you soon... </p>
-                        <a className="back" href="">Back to home</a>
-                        <div className="clr"></div>
+            <section className="login-main-wrapper">
+                <div className="main-container">
+                    <div className="login-process">
+                        <div className="login-main-container">
+                            <div className="thankyou-wrapper">
+                                <div className="center"><img src={thanks} className="image" alt="thanks" /></div>
+                                <p className="img-para">Results will be announced soon!</p>
+                                <div className="center">
+                                    <button className="back" onClick={() => {
+                                        navigate("/")
+                                    }}>Back to Vote</button>
+                                </div>
+                                <div className="clr"></div>
+                            </div>
+                            <div className="clr"></div>
+                        </div>
                     </div>
                     <div className="clr"></div>
                 </div>
-            </div>
-            <div className="clr"></div>
-        </div>
-    </section>
-        
-        
+            </section>
+
+
         </>
     )
 }
