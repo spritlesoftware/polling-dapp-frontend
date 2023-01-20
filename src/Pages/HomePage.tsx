@@ -1,4 +1,4 @@
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import Alert from 'react-popup-alert'
 import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS, CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
@@ -6,15 +6,23 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import RPC from "../web3RPC";
 import "../App.css";
 import Card from "../component/card";
-import {Routes,Route} from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { PollingContext } from "../Listcontext/listcontext";
 import Polling from "../component/Polling";
 
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
 function HomePage() {
-  const poll_question: {ques:string,date:string,vote:number}[] = useContext(PollingContext);
-  console.log(poll_question,".........................................")
+  const poll_question: {
+    poll_question: {
+      ques: string;
+      option1: string;
+      option2: string;
+      date: string;
+      vote: number;
+    }[], userDetails: { username: string; usermail: string; rpc: any }
+  } = useContext(PollingContext);
+  console.log(poll_question, ".........................................")
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
 
@@ -65,7 +73,7 @@ function HomePage() {
         const openloginAdapter = new OpenloginAdapter({
           adapterSettings: {
             network: "testnet",
-            uxMode: "popup",  
+            uxMode: "popup",
             loginConfig: {
               // Add login configs corresponding to the providers on modal
               // Google login
@@ -199,7 +207,7 @@ function HomePage() {
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
       balance = await rpc.getBalance();
-      console.log("RPC",rpc)
+      console.log("RPC", rpc)
 
       //***********START */
       /*var myHeaders = new Headers();
@@ -239,7 +247,7 @@ function HomePage() {
     }
     const user = await web3auth.getUserInfo();
     if (user.name)
-        onShowAlert('success', "Name: " + user.name, "User Details");
+      onShowAlert('success', "Name: " + user.name, "User Details");
   };
 
   const logout = async () => {
@@ -313,7 +321,7 @@ function HomePage() {
 
   const loggedInView = (
     <>
-     
+
       <div className="alert">
         <Alert
           header={alert.header}
@@ -351,8 +359,8 @@ function HomePage() {
       <button onClick={getPrivateKey} className="card">
         Get Private Key
       </button> */}
-      <Card questions={poll_question} />
-      {/* <Polling question={poll_question} /> */}
+      <Card questions={poll_question.poll_question} />
+
       <button onClick={logout} className="card">
         Log Out
       </button>
@@ -371,23 +379,20 @@ function HomePage() {
 
   return (
     <>
-    
-    <div className="container">
-     
-      <h1 className="title">
-        <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
-          Web3Auth 
-        </a>
+
+      <div className="container">
+
+        <h1 className="title">
+          <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
+            Web3Auth
+          </a>
           &nbsp;with ReactJS Example
-      </h1>
+        </h1>
 
-      {/* <div className="grid">{provider ? loggedInView : unloggedInView}</div> */}
-      
-      
-    </div>
+        {/* <div className="grid">{provider ? loggedInView : unloggedInView}</div> */}
 
 
-  
+      </div>
     </>
   );
 }

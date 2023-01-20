@@ -15,10 +15,16 @@ import Vote from "./assets/yellow.png"
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
 function App() {
-  const poll_question: { ques: string, date: string, vote: number ,option1:string, option2:string}[] = useContext(PollingContext);
+  const poll_question: {poll_question: {
+    ques: string;
+    option1: string;
+    option2: string;
+    date: string;
+    vote: number;
+}[], userDetails: {username:string;usermail:string;rpc:any}} = useContext(PollingContext);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  const PollContext = useContext(PollingContext)
+  // const PollContext = useContext(PollingContext)
   // const{userDetails,setUserDetails}=useContext(PollingContext)
 
 
@@ -364,7 +370,7 @@ function App() {
     
   </div>
           
-      <Card questions={poll_question} />
+      <Card questions={poll_question.poll_question} />
  
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
