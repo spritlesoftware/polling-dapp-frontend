@@ -8,11 +8,11 @@ function Thankpage() {
     var navigate = useNavigate()
     return (
         <>
-        <div className="col-6">
-          <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
-        </div>
-        <div className="col-6">
-        </div>
+            <div className="col-6">
+                <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
+            </div>
+            <div className="col-6">
+            </div>
             <section className="login-main-wrapper">
                 <div className="main-container">
                     <div className="login-process">
@@ -22,7 +22,7 @@ function Thankpage() {
                                 <p className="img-para">Results will be announced soon!</p>
                                 <div className="center">
                                     <button className="btn btn-primary submit2" onClick={() => {
-                                        navigate("/")
+                                        navigate("/card")
                                     }}>Back to Vote</button>
                                 </div>
                                 <div className="clr"></div>

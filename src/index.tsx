@@ -10,8 +10,7 @@ import {Routes,Route} from "react-router-dom"
 import Polling from './component/Polling';
 import ListProvider from './Listcontext/listcontext';
 import Thankpage from './component/Thankpage';
-import Card from './component/card';
-import NavBar from './NavBar';
+import Cards from './component/card';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,6 +24,8 @@ root.render(
       <Route path='/pole' element={<Polling/>}></Route>
       <Route path='' element={<App/>}></Route>  
       <Route path='/thankyou' element={<Thankpage/>}></Route>
+      <Route path='/card' element={<Cards/>}></Route>
+     
     </Routes>
     </div>
     </BrowserRouter>

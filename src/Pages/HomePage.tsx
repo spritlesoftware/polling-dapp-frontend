@@ -6,7 +6,7 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import RPC from "../web3RPC";
 import "../App.css";
 import Card from "../component/card";
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import { PollingContext } from "../Listcontext/listcontext";
 import Polling from "../component/Polling";
 
@@ -21,6 +21,7 @@ function HomePage() {
       date: string;
       vote: number;
     }[], userDetails: { username: string; usermail: string; rpc: any }
+    
   } = useContext(PollingContext);
   console.log(poll_question, ".........................................")
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
@@ -191,6 +192,7 @@ function HomePage() {
   }, []);
 
   const login = async () => {
+  
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
@@ -359,7 +361,7 @@ function HomePage() {
       <button onClick={getPrivateKey} className="card">
         Get Private Key
       </button> */}
-      <Card questions={poll_question.poll_question} />
+      {/* <Card questions={poll_question.poll_question} /> */}
 
       <button onClick={logout} className="card">
         Log Out

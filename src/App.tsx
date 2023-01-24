@@ -11,23 +11,30 @@ import SpritleLogo from "./assets/spritle_logo.png"
 import PollLogo from "./assets/votelogo.png"
 import logins from "./assets/login.png"
 import Vote from "./assets/yellow.jpg"
+import { useNavigate } from "react-router-dom";
 
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
-
 function App() {
-  const poll_question: {
+  const poll_question_and_details: {
     poll_question: {
       ques: string;
       option1: string;
       option2: string;
       date: string;
       vote: number;
-    }[], userDetails: { username: string; usermail: string; rpc: any }} = useContext(PollingContext);
-  
+    }[],
+
+    userDetails: {
+      username: string;
+      usermail: string;
+      rpc: any
+    },
+  } = useContext(PollingContext);
+
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-
+  const navigate = useNavigate();
   const [alert, setAlert] = useState({
     header: 'header',
     type: 'error',
@@ -180,30 +187,27 @@ function App() {
   }, []);
 
   const login = async () => {
+    //  navigate('/card')
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
     }
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
+    navigate('/card')
+    console.log(poll_question_and_details.userDetails, "userDetails-----------------------------")
 
-    // let userDetails = {
-    //   username: "",
-    //   usermail: "",
-    //   rpc: {}
-    // };
- 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
 
-    poll_question.userDetails.username = user_name;
-    console.log(user_name,"username")
-    poll_question.userDetails.usermail = user.email ? user.email : "-";
+    poll_question_and_details.userDetails.username = user_name;
+    console.log(poll_question_and_details.userDetails.username, "username...............................")
+    poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
 
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
       balance = await rpc.getBalance();
-      poll_question.userDetails.rpc = rpc;
+      poll_question_and_details.userDetails.rpc = rpc;
     }
   };
 
@@ -224,6 +228,7 @@ function App() {
     }
     await web3auth.logout();
     setProvider(null);
+
   };
 
   const getChainId = async () => {
@@ -285,46 +290,42 @@ function App() {
     const privateKey = await rpc.getPrivateKey();
     onShowAlert('success', privateKey, "Private Key");
   };
+  function Createpoll() {
+    return (
+      <div>
+      </div>
+
+    )
+  }
 
   const loggedInView = (
     <>
-      <div></div>
-      <div className="row card-logout">
-        <div className="col-6">
-          <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
-        </div>
-        <div className="col-6">
-          <button onClick={logout} className="logout-btn">Logout</button>
-        </div>
-      </div>
-
-      <Card questions={poll_question.poll_question} />
-      <div id="console" style={{ whiteSpace: "pre-line" }}>
-        <p style={{ whiteSpace: "pre-line" }}></p>
-      </div>
     </>
   );
-
   const unloggedInView = (
     <div className="container-fluid cardpg">
+
       <div className="row">
-        <div className="col-lg-6 first">
+        <div className="col-lg-6 first-first">
+
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo" />
           <img src={Vote} alt="PollLogo " className="yellow" />
+
           <p className="company_title text">Make your vote count!
           </p>
           <p className="vote1">Feel proud to be a voter anywhere, be ready to vote!</p>
         </div>
         <div className="col-lg-6 login" >
+       
+          <div className="wel">
           <img src={PollLogo} alt="PollLogo " className="poll-img second" />
-          <p className="welcome">Welcome!</p>
-          <p className="welcome1">If you don't vote, you can't complain!
-          </p>
-          <p className="welcome1">
-            Vote! Let your voice be heard!
-          </p>
-          <p className="welcome1">The real power is to vote!</p>
-          <div className="login-para">
+            <p className="welcome">Welcome!</p>
+            <p className="welcome1">If you don't vote, you can't complain!
+            </p>
+            <p className="welcome1">
+              Vote! Let your voice be heard!
+            </p>
+            <p className="welcome1">The real power is to vote!</p>
             <input type="button" value="Login" onClick={() => { login() }} className=" btn btn-primary submit1 "></input>
           </div>
         </div>

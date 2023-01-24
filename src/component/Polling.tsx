@@ -1,0 +1,102 @@
+import React, { useState } from "react";
+import "./Polling.css";
+import { useContext } from "react";
+import { PollingContext } from "../Listcontext/listcontext";
+import { useLocation } from "react-router-dom";
+import "../App.css";
+import { useNavigate } from "react-router-dom";
+import SpritleLogo from "../assets/spritle_logo.png";
+import { useEffect } from "react";
+
+const vote = 0
+function Polling() {
+    const navigate = useNavigate();
+    const poll_question = useContext(PollingContext);
+    const location = useLocation();
+    const [polling, setPolling] = useState<{statement: string, candidates: string[]}>()
+    const thank = (() => {
+        navigate('/thankyou')
+    })
+    const id = location.state.id
+    console.log("index ", id);
+    const options = {};
+     // console.log("options", options)
+     useEffect(() => {
+        fetch("https://polling.spritle.com/api/getPollDetails", {
+            method: 'POST',
+            body: JSON.stringify({
+                contractId: id
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer 51ca94dc9a4674a334c4c548f9d95c1f8881a776f579487e4afb07c9c5f3b247f9d5198c7852173c3daab0d4de80ed55b03f1badafc3c9900dca6efefb50db210f236d4f5dc7345f21398eb47cf79169d4fed0145879c9e8781997318b1cdc702726c6ae143d6283525e04c3f36e326e013f947cf9f6330787828843528028fc'
+            }
+            }).then(async(res) => {
+                 await res.json().then(async(element) => {
+                    console.log(element,"element...............")
+                    setPolling(element)}
+                  )  }).catch(err => console.log(err));
+},[])
+    console.log(polling,"polling.............")
+    const length1=polling?.candidates.length
+    function Text() {
+        //[poll_question.poll_question[index.id]]
+       
+console.log({polling})
+console.log(length1)
+
+                return (
+                    <>
+                    <div> 
+                        <div className="col-6">
+                            <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
+                        </div>
+                        <div className="col-6">
+                        </div>
+                        <div className="card p-3 mb-2 ques-card"  >
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex flex-row align-items-center">
+                                    <div className="ms-2 c-details">
+                                    </div>
+                                </div>
+                            </div>
+                          
+        
+                            
+                            <div className="mt-5">   <h6 className="heading">{polling?.statement}</h6>
+                               
+                                {
+                                 polling?.candidates.map(ans => (
+                                        <div className="form-check">
+                                            <input className="form-check-input radio" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" />
+                                            <label className="form-check-label">
+                                                {ans}
+                                            </label>
+                                        </div>))
+                                    }
+                        
+                                <button type="button" className="btn btn-primary submit" onClick={thank}>Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                    </>
+                )
+    }
+    return (
+        <div>
+            <div className="container-fluid">
+            </div>
+            <div className="container-fluid">
+                <div className="row">
+                </div>
+                <div className="row">
+                </div>
+                <div className="row">
+                    <Text />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Polling
