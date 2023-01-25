@@ -100,3 +100,4 @@ console.log(length1)
 }
 
 export default Polling
+{/* <Form.Control as="textarea" value={detail?.statement} onChange={((e:any) => setDetail({...detail,user: {username: poll_question_and_details.userDetails.username, usermail:poll_question_and_details.userDetails.usermail,publickey:"",privatekey:""}, statement:e.target.value, candidates: []}))} className='text-area1' placeholder='Enter your question' rows={3} /> */}
