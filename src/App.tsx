@@ -294,7 +294,6 @@ function App() {
     return (
       <div>
       </div>
-
     )
   }
 
@@ -336,7 +335,7 @@ function App() {
   return (
     <>
       <div>
-        {provider ? loggedInView : unloggedInView}
+        {unloggedInView}
       </div>
     </>
   );

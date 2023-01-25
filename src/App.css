@@ -422,7 +422,7 @@ form {
 .form-control{
   height: 40px;
   box-shadow: none;
-  color: #969fa4;
+  /* color: #969fa4; */
 }
 .form-control:focus{
   border-color: #5cb85c;
@@ -508,9 +508,17 @@ form {
 background-color:initial;
 }
 .first_first{
-  background-color: white;
+  background-color: white !important;
  
 }
 .side{
   background-color: initial !important;
 }
+.cardpg{
+  background-color: white
+  ;
+}
+.text-area1 {
+  height: 85px;
+}
+
