@@ -1,40 +1,145 @@
-import { useEffect, useState, useContext } from "react";
+import { Link, } from 'react-router-dom';
+import './card.css';
+import voteicon from "../assets/voteicon.jpg"
+import React, { useRef } from "react";
+import Ract, { Component } from 'react'
+import { useContext } from "react";
+import { PollingContext } from "../Listcontext/listcontext";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SpritleLogo from "../assets/spritle_logo.png";
+import { useEffect, useState, } from "react";
 import Alert from 'react-popup-alert'
 import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS, CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import RPC from "./web3RPC"
-import "./App.css";
-import Card from "./component/card";
-import { PollingContext } from "./Listcontext/listcontext";
-import SpritleLogo from "./assets/spritle_logo.png"
-import PollLogo from "./assets/votelogo.png"
-import logins from "./assets/login.png"
-import Vote from "./assets/yellow.jpg"
-import { useNavigate } from "react-router-dom";
-
+import RPC from "../web3RPC";
+import Card from "../component/card";
+import { Routes, Route, Navigate } from "react-router-dom"
+import Polling from "../component/Polling";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
-function App() {
-  const poll_question_and_details: {
-    poll_question: {
-      ques: string;
-      option1: string;
-      option2: string;
-      date: string;
-      vote: number;
-    }[],
+function Cards() {
 
-    userDetails: {
-      username: string;
-      usermail: string;
-      rpc: any
-    },
-  } = useContext(PollingContext);
-
+  const navigate = useNavigate();
+  const poll_question_and_details = useContext(PollingContext);
+  console.log(poll_question_and_details);
+  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votecounts: number,statement:string }[]>([])
+  console.log(poll_question_and_details.userDetails.usermail, "___________________________")
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  const navigate = useNavigate();
+  const [poll_collection, setPoll_collection] = useState<{ statement: string, option: string[] }>({ statement: '', option: [] })
+
+  useEffect(() => {
+
+    fetch("https://polling.spritle.com/api/myRole", {
+      method: 'POST',
+      body: JSON.stringify({
+        user: {
+          usermail: "mohan.creator.k@gmail.com"
+        }
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer 51ca94dc9a4674a334c4c548f9d95c1f8881a776f579487e4afb07c9c5f3b247f9d5198c7852173c3daab0d4de80ed55b03f1badafc3c9900dca6efefb50db210f236d4f5dc7345f21398eb47cf79169d4fed0145879c9e8781997318b1cdc702726c6ae143d6283525e04c3f36e326e013f947cf9f6330787828843528028fc'
+      }
+    }).then((res) => res.json()).then(data => setResuse(data.polls)).catch(err => console.log(err));
+  }, [])
+  console.log(useRef,"useRef..............")
+
+  function AddRemoveInputField() {
+    const [inputFields, setInputFields] = useState([{
+      option: '',
+    }]);
+    const addInputField = () => {
+      setInputFields([...inputFields, {
+        option: '',
+      }])
+    }
+    const removeInputFields = (index: any) => {
+      const rows = [...inputFields];
+      rows.splice(index, 1);
+      setInputFields(rows);
+    }
+    const handleChange = (index: number, name: any, evnt: any) => {
+      const { name: any, value } = evnt.target;
+      const list = [...inputFields];
+      // list[index][name] = value;
+      setInputFields(list);
+    }
+    return (
+
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-8">
+            <div className="col-sm-12">
+              <div className="row">
+                <button className="btn btn-outline-success " onClick={addInputField}>Add Option</button>
+              </div>
+            </div>
+            {
+              inputFields.map((data, index) => {
+                return (
+                  <div className="row my-3" key={index}>
+                    <div className="col">
+                      <div className="form-group">
+                        <input type="text" name="option" className="form-control" placeholder="Option " onChange={((e) => setPoll_collection({ ...poll_collection, option: [e.target.value] }))} />
+                      </div>
+                    </div>
+                    <div className="col">
+                      {(inputFields.length !== 1) ? <button className="btn btn-outline-danger" onClick={removeInputFields}>x</button> : ''}
+                    </div>
+                  </div>
+                )
+              })
+            }
+
+          </div>
+        </div>
+        <div className="col-sm-4">
+
+        </div>
+      </div>
+
+    )
+  }
+
+  function Create_poll() {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    return (
+
+      <>
+        <Button variant="primary" className="createpollbtn" onClick={handleShow}>
+          Create Poll
+        </Button>
+
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Create Poll</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control type="text" placeholder="Enter your question" onChange={((e) => setPoll_collection({ ...poll_collection, statement: e.target.value }))} />
+
+            {AddRemoveInputField()}
+
+
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleClose}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+      </>
+    );
+  }
+
   const [alert, setAlert] = useState({
     header: 'header',
     type: 'error',
@@ -50,7 +155,6 @@ function App() {
       show: false
     })
   }
-
   function onShowAlert(type: string, val: string, _header: string) {
     setAlert({
       header: _header,
@@ -62,7 +166,6 @@ function App() {
 
   var user_name = "";
   var balance = "";
-
   useEffect(() => {
     const init = async () => {
       try {
@@ -185,23 +288,22 @@ function App() {
 
     init();
   }, []);
-
   const login = async () => {
-    //  navigate('/card')
+
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
     }
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
-    navigate('/card')
-    console.log(poll_question_and_details.userDetails, "userDetails-----------------------------")
+    console.log(poll_question_and_details.userDetails, "userDetails***")
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
 
     poll_question_and_details.userDetails.username = user_name;
-    console.log(poll_question_and_details.userDetails.username, "username...............................")
+    console.log(poll_question_and_details.userDetails.username, "username in card")
+
     poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
 
     if (web3authProvider) {
@@ -210,7 +312,6 @@ function App() {
       poll_question_and_details.userDetails.rpc = rpc;
     }
   };
-
   const getUserInfo = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
@@ -228,7 +329,7 @@ function App() {
     }
     await web3auth.logout();
     setProvider(null);
-
+    navigate(-1)
   };
 
   const getChainId = async () => {
@@ -297,28 +398,33 @@ function App() {
 
     )
   }
-
   const loggedInView = (
     <>
+      <div className="row card-logout">
+        <div className="col-6">
+          <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-card" />
+        </div>
+        <div className="col-6">
+        </div>
+      </div>
+      <div id="console" style={{ whiteSpace: "pre-line" }}>
+        <p style={{ whiteSpace: "pre-line" }}></p>
+      </div>
     </>
   );
   const unloggedInView = (
     <div className="container-fluid cardpg">
 
       <div className="row">
-        <div className="col-lg-6 first-first">
+        <div className="col-lg-6 side">
 
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo" />
-          <img src={Vote} alt="PollLogo " className="yellow" />
-
           <p className="company_title text">Make your vote count!
           </p>
           <p className="vote1">Feel proud to be a voter anywhere, be ready to vote!</p>
         </div>
         <div className="col-lg-6 login" >
-       
-          <div className="wel">
-          <img src={PollLogo} alt="PollLogo " className="poll-img second" />
+          <div>
             <p className="welcome">Welcome!</p>
             <p className="welcome1">If you don't vote, you can't complain!
             </p>
@@ -326,6 +432,8 @@ function App() {
               Vote! Let your voice be heard!
             </p>
             <p className="welcome1">The real power is to vote!</p>
+          </div>
+          <div className="login-para">
             <input type="button" value="Login" onClick={() => { login() }} className=" btn btn-primary submit1 "></input>
           </div>
         </div>
@@ -333,13 +441,61 @@ function App() {
     </div>
   );
 
+  const handleclick = (id: number) => {
+    console.log(id, "index")
+    navigate('/pole', { state: { id: id } });
+
+  }
+
   return (
-    <>
-      <div>
-        {provider ? loggedInView : unloggedInView}
+    <div>
+
+      <div className="row">
+        <div className="col-lg-6 first">
+          <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo1" />
+        </div>
+        <div className="col-lg-6 logout-button">
+          {Create_poll()}
+          <button onClick={logout} className="btn btn-primary logout ">Logout</button>
+        </div>
       </div>
-    </>
-  );
+      <div>
+        <div className="container mt-5 mb-3">
+          <div className="row">
+            {
+              resuse.map((element, id) => {
+                return (
+
+                  <div className='col-lg-4'>
+                    <div className="card p-3 mb-2" onClick={() => { handleclick(element.id) }}  >
+                      <div className="d-flex justify-content-between">
+                        <div className="d-flex flex-row align-items-center">
+                          <div  > <img className='voteicon' src={voteicon} /></div>
+                          <div className="ms-2 c-details">
+                            <h6 className="mb-0"></h6> <span>{element.createdAt}</span>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-5 ">   <h6 className="heading ">{element.statement}</h6>
+                        <div className="mt-5">
+                          <progress id="file" value={"element.vote"} max="100"></progress>
+                          <div className="mt-3"> <span className="text1">{element.votecounts} Applied <span className="text2">of 100 capacity</span></span> </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                )
+              }
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
 }
 
-export default App;
+export default Cards
