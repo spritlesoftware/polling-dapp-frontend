@@ -22,40 +22,38 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/Form'
 import Remove from "../assets/Close.png";
+import { setuid } from 'process';
 
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
 function Cards() {
-
   const navigate = useNavigate();
   const poll_question_and_details = useContext(PollingContext);
   console.log(poll_question_and_details);
-  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votecounts: number,statement:string }[]>([])
+  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number, statement: string }[]>([])
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  const [detail, setDetail] = useState<{user: {username: string, usermail: string, publickey: string, privatekey: string}, statement: string, candidates: string[]}>({user: {username: '', usermail: '', publickey: '', privatekey: ''}, statement: '', candidates: []})
+  const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string }, statement: string, candidates: string[] }>({ user: { username: '', usermail: '', publickey: '', privatekey: '' }, statement: '', candidates: [] })
   const [poll_collection, setPoll_collection] = useState<{ statement: string, option: string[] }>({ statement: '', option: [] })
-  const [role_id,setRole_id]=useState<null| number>(0)
-  const [question,setQuestion]=useState("")
-  const[option,setOption]=useState<Record<string, string>>({'0': '', '1': ''})
+  const [role_id, setRole_id] = useState<null | number>(0)
+  const [question, setQuestion] = useState("")
+  const [option, setOption] = useState<Record<string, string>>({ '0': '', '1': '' });
+  useEffect(() => {
+    const opt = Object.values(option)
+    setDetail(prev => ({
+      ...prev, candidates: opt
+    }))
+  }, [option])
 
-  useEffect(()=>{
-  const opt=Object.values(option)
-  setDetail(prev=>({
-    ...prev,candidates:opt
-  }))
-},[option])
-
-useEffect(() => {
-  setDetail({user: {username: poll_question_and_details.userDetails.username, usermail:poll_question_and_details.userDetails.usermail,publickey:"",privatekey:""}, statement:question, candidates: []}) 
-}, [])
+  useEffect(() => {
+    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: question, candidates: [] })
+  }, [])
 
   useEffect(() => {
     fetch("https://polling.spritle.com/api/myRole", {
       method: 'POST',
       body: JSON.stringify({
         user: {
-          // usermail: poll_question_and_details.userDetails.usermail
           usermail: "mohan.creator.k@gmail.com"
         }
       }),
@@ -64,28 +62,27 @@ useEffect(() => {
         'Authorization': 'Bearer 51ca94dc9a4674a334c4c548f9d95c1f8881a776f579487e4afb07c9c5f3b247f9d5198c7852173c3daab0d4de80ed55b03f1badafc3c9900dca6efefb50db210f236d4f5dc7345f21398eb47cf79169d4fed0145879c9e8781997318b1cdc702726c6ae143d6283525e04c3f36e326e013f947cf9f6330787828843528028fc'
       }
     }).then((res) => res.json()).then(data => {
-      console.log(data,"PPPPPP")
+      console.log(data, "PPPPPP")
       setRole_id(data.role_id)
       setResuse(data.polls);
     }).catch(err => console.log(err));
   }, [])
- 
 
-  function clk(){
+  function clk() {
     fetch("https://polling.spritle.com/api/votingC_newPollDeploy", {
       method: 'POST',
-      body: JSON.stringify({
-            detail
-      }),
+      body: JSON.stringify(
+        detail
+      ),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer 51ca94dc9a4674a334c4c548f9d95c1f8881a776f579487e4afb07c9c5f3b247f9d5198c7852173c3daab0d4de80ed55b03f1badafc3c9900dca6efefb50db210f236d4f5dc7345f21398eb47cf79169d4fed0145879c9e8781997318b1cdc702726c6ae143d6283525e04c3f36e326e013f947cf9f6330787828843528028fc'
       }
     }).then((res) => res.json()).then(data => {
-    }).catch(err => console.log(err));  
+    }).catch(err => console.log(err));
   }
   function AddRemoveInputField() {
-    const [inputFields, setInputFields] = useState<{option: string}[]>([]);
+    const [inputFields, setInputFields] = useState<{ option: string }[]>([]);
     const addInputField = () => {
       setInputFields([...inputFields, {
         option: '',
@@ -96,12 +93,11 @@ useEffect(() => {
       rows.splice(index, 1);
       setInputFields(rows);
       setOption(prev => ({}))
-      
+
     }
     const handleChange = (index: number, name: any, evnt: any) => {
       const { name: any, value } = evnt.target;
       const list = [...inputFields];
-      //  list[index][name] = value;
       setInputFields(list);
     }
 
@@ -112,13 +108,12 @@ useEffect(() => {
           <div className="col-sm-8">
             <div className="col-sm-12">
               <div className="row">
-               
+
               </div>
             </div>
-            <input type="text" name="option" className="form-control option-one" placeholder="Option "  value={option['0']} onChange={((e:React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({...prev, '0': e.target.value})))} />
-            <input type="text" name="option" className="form-control option-one" placeholder="Option " value={option['1']} onChange={((e:React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({...prev, '1': e.target.value})))} />
-            
-                      
+            <input type="text" name="option" className="form-control option-one" placeholder="Option " value={option['0']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '0': e.target.value })))} />
+            <input type="text" name="option" className="form-control option-one" placeholder="Option " value={option['1']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '1': e.target.value })))} />
+
             {
               inputFields.map((data, index) => {
                 const idx = index + 2
@@ -126,18 +121,18 @@ useEffect(() => {
                   <div className="row my-3" key={index}>
                     <div className="col">
                       <div className="form-group">
-                        <input type="text" name="option" className="form-control new-option" placeholder="Option " value={option[index+2] || ''} onChange={((e:React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({...prev, [`${idx}`]: e.target.value})))} />
-                     
+                        <input type="text" name="option" className="form-control new-option" placeholder="Option " value={option[index + 2] || ''} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, [`${idx}`]: e.target.value })))} />
+
                       </div>
                     </div>
                     <div className="col">
-                      {<img src={Remove} alt="spritlelogo" onClick={removeInputFields} className="remove" />}     
+                      {<img src={Remove} alt="spritlelogo" onClick={removeInputFields} className="remove" />}
                     </div>
                   </div>
                 )
               })
             }
-             <button className="btn btn-success  add-options" onClick={addInputField}>Add Option</button>
+            <button className="btn btn-success  add-options" onClick={addInputField}>Add Option</button>
           </div>
         </div>
         <div className="col-sm-4">
@@ -152,29 +147,28 @@ useEffect(() => {
     const handleShow = () => setShow(true);
     return (
       <>
-      {
-        role_id===1 &&
-       ( <Button variant="primary" className="createpollbtn" onClick={handleShow}>
-          Create Poll
-        </Button>)
-      }
-      {
-        role_id!==1 &&       
-        ( <b>anonymous userDetails</b>)
-      }
-  
+        {
+          role_id === 1 &&
+          (<Button variant="primary" className="createpollbtn" onClick={handleShow}>
+            Create Poll
+          </Button>)
+        }
+        {
+          role_id !== 1 &&
+          (<b>anonymous userDetails</b>)
+        }
+
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Create Poll</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-         
-          <Form>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-        {/* <Form.Control as="textarea"  onChange={((e) => setDetail({ ...detail, statement: e.target.value }))} className='text-area1' placeholder='Enter your question' rows={3} /> */}
-        <Form.Control as="textarea" value={option.candidates} onChange={((e:any) => setDetail({user: {username: poll_question_and_details.userDetails.username, usermail:poll_question_and_details.userDetails.usermail,publickey:"",privatekey:""}, statement:e.target.value, candidates: []}))} className='text-area1' placeholder='Enter your question' rows={3} /> 
-      </Form.Group>
-    </Form>
+
+            <Form>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                <Form.Control as="textarea" value={option.candidates} onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: e.target.value, candidates: [] }))} className='text-area1' placeholder='Enter your question' rows={3} />
+              </Form.Group>
+            </Form>
             {AddRemoveInputField()}
           </Modal.Body>
           <Modal.Footer>
@@ -186,8 +180,8 @@ useEffect(() => {
       </>
     );
   }
-  console.log(question,"setQuestion")
-  console.log(poll_collection.statement,"poll_collection.statement")
+  console.log(question, "setQuestion")
+  console.log(poll_collection.statement, "poll_collection.statement")
 
   const [alert, setAlert] = useState({
     header: 'header',
@@ -447,9 +441,9 @@ useEffect(() => {
     )
   }
 
-  useEffect(()=>{
-    console.log(detail,"...............poll_collection")
-  },[detail])
+  useEffect(() => {
+    console.log(detail, "...............poll_collection")
+  }, [detail])
 
   const loggedInView = (
     <>
@@ -499,10 +493,10 @@ useEffect(() => {
     navigate('/pole', { state: { id: id } });
 
   }
+  console.log(resuse, "reuse!!!!!!!!!!!!!!!!!!")
 
   return (
     <div>
-
       <div className="row">
         <div className="col-lg-6 first">
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo1" />
@@ -526,6 +520,7 @@ useEffect(() => {
                           <div  > <img className='voteicon' src={voteicon} /></div>
                           <div className="ms-2 c-details">
                             <h6 className="mb-0"></h6> <span>{element.createdAt}</span>
+                          
 
                           </div>
                         </div>
@@ -533,7 +528,7 @@ useEffect(() => {
                       <div className="mt-5 ">   <h6 className="heading ">{element.statement}</h6>
                         <div className="mt-5">
                           <progress id="file" value={"element.vote"} max="100"></progress>
-                          <div className="mt-3"> <span className="text1">{element.votecounts} Applied <span className="text2">of 100 capacity</span></span> </div>
+                         <div className="mt-3"> <span className="text1">{element.votesCount} Vote <span className="text2"></span></span> </div>
                         </div>
                       </div>
                     </div>
@@ -546,7 +541,7 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      
+
     </div>
   )
 
