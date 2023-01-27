@@ -4,3 +4,5 @@ build
 .vscode
 .gitignore
 yarn.lock
+.env_local
+.env

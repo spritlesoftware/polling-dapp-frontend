@@ -8,7 +8,7 @@ import "../App.css";
 import { useNavigate } from "react-router-dom";
 import SpritleLogo from "../assets/spritle_logo.png";
 import { useEffect } from "react";
-const vote = 0
+
 function Polling() {
     const navigate = useNavigate();
     const poll_question_and_details = useContext(PollingContext);
@@ -36,28 +36,28 @@ function Polling() {
     const options = {};
     
     function submit() {
-        fetch("https://polling.spritle.com/api/votingC_vote", {
+        fetch(process.env.REACT_APP_BACKEND + "/api/votingC_vote", {
           method: 'POST',
           body: JSON.stringify(
             vote_detail
           ),
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            'Authorization': 'Bearer 51ca94dc9a4674a334c4c548f9d95c1f8881a776f579487e4afb07c9c5f3b247f9d5198c7852173c3daab0d4de80ed55b03f1badafc3c9900dca6efefb50db210f236d4f5dc7345f21398eb47cf79169d4fed0145879c9e8781997318b1cdc702726c6ae143d6283525e04c3f36e326e013f947cf9f6330787828843528028fc'
+            'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
           }
         }).then((res) => res.json()).then(data => {
         }).catch(err => console.log(err));
       }
 
     useEffect(() => {
-        fetch("https://polling.spritle.com/api/getPollDetails", {
+        fetch(process.env.REACT_APP_BACKEND + "/api/getPollDetails", {
             method: 'POST',
             body: JSON.stringify({
                 contractId: id
             }),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                'Authorization': 'Bearer 51ca94dc9a4674a334c4c548f9d95c1f8881a776f579487e4afb07c9c5f3b247f9d5198c7852173c3daab0d4de80ed55b03f1badafc3c9900dca6efefb50db210f236d4f5dc7345f21398eb47cf79169d4fed0145879c9e8781997318b1cdc702726c6ae143d6283525e04c3f36e326e013f947cf9f6330787828843528028fc'
+                'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
             }
         }).then(async (res) => {
             await res.json().then(async (element) => {

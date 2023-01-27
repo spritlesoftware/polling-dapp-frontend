@@ -28,7 +28,8 @@ function App() {
     userDetails: {
       username: string;
       usermail: string;
-      rpc: any
+      rpc: any;
+      w3auth: any;
     },
   } = useContext(PollingContext);
 
@@ -184,10 +185,10 @@ function App() {
     };
 
     init();
+
   }, []);
 
   const login = async () => {
-    //  navigate('/card')
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
@@ -195,7 +196,7 @@ function App() {
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
     navigate('/card')
-    console.log(poll_question_and_details.userDetails, "userDetails-----------------------------")
+  
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
@@ -203,6 +204,7 @@ function App() {
     poll_question_and_details.userDetails.username = user_name;
     console.log(poll_question_and_details.userDetails.username, "username...............................")
     poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
+    poll_question_and_details.userDetails.w3auth = web3auth;
 
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
@@ -290,17 +292,7 @@ function App() {
     const privateKey = await rpc.getPrivateKey();
     onShowAlert('success', privateKey, "Private Key");
   };
-  function Createpoll() {
-    return (
-      <div>
-      </div>
-    )
-  }
 
-  const loggedInView = (
-    <>
-    </>
-  );
   const unloggedInView = (
     <div className="container-fluid cardpg">
 

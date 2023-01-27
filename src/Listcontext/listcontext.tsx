@@ -1,3 +1,4 @@
+import { Web3Auth } from '@web3auth/modal';
 import React, { createContext,  } from 'react';
 import { useEffect, useState ,useContext} from "react";
 import "../App.css";
@@ -11,13 +12,13 @@ interface pollingContextInterface {poll_question: {
         vote: number;
     }[],
         setPoll_question:Function,
-        userDetails: {username:string;usermail:string;rpc:any}}
+        userDetails: {username:string;usermail:string;rpc:any; w3auth:any}}
     
     export const PollingContext = createContext<pollingContextInterface>({poll_question: [],setPoll_question: () => {},
-     userDetails: {username: '', usermail: '', rpc:{}},})
+     userDetails: {username: '', usermail: '', rpc:{}, w3auth: {}},})
     
     const ListProvider = ({children}: React.PropsWithChildren) => {
-        const userDetails={  username: "", usermail: "", rpc: {}}
+        const userDetails={  username: "", usermail: "", rpc: {}, w3auth: ""}
         console.log(userDetails,"userDetails")
         const [poll_question,setPoll_question] = useState([])
         const [poll_collection,setPoll_collection]=useState({})
