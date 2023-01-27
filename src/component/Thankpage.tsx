@@ -37,3 +37,7 @@ function Thankpage() {
     )
 }
 export default Thankpage
+
+// onClick={((e: any) => setVote_detail({contractId:id,user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, candidates:e.target.value}))}
+
+

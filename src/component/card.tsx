@@ -54,7 +54,7 @@ function Cards() {
       method: 'POST',
       body: JSON.stringify({
         user: {
-          usermail: "mohan.creator.k@gmail.com"
+          usermail: poll_question_and_details.userDetails.usermail
         }
       }),
       headers: {
@@ -366,13 +366,16 @@ function Cards() {
   };
 
   const logout = async () => {
+  
     if (!web3auth) {
+    <div>  {unloggedInView}</div>
       console.log("web3auth not initialized yet");
+     
       return;
     }
     await web3auth.logout();
     setProvider(null);
-    navigate(-1)
+   navigate('/')
   };
 
   const getChainId = async () => {
@@ -496,8 +499,8 @@ function Cards() {
   console.log(resuse, "reuse!!!!!!!!!!!!!!!!!!")
 
   return (
-    <div>
-      <div className="row">
+    <div className="">
+      <div className="row  cards1">
         <div className="col-lg-6 first">
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo1" />
         </div>
@@ -514,14 +517,12 @@ function Cards() {
                 return (
 
                   <div className='col-lg-4'>
-                    <div className="card p-3 mb-2" onClick={() => { handleclick(element.id) }}  >
+                    <div className="card p-3 mb-2 card3" onClick={() => { handleclick(element.id) }}  >
                       <div className="d-flex justify-content-between">
                         <div className="d-flex flex-row align-items-center">
                           <div  > <img className='voteicon' src={voteicon} /></div>
                           <div className="ms-2 c-details">
                             <h6 className="mb-0"></h6> <span>{element.createdAt}</span>
-                          
-
                           </div>
                         </div>
                       </div>
