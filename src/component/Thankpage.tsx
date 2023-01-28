@@ -9,9 +9,10 @@ import { useLocation } from "react-router-dom";
 
 function Thankpage() {
     var navigate = useNavigate()
+    const location = useLocation();
     const poll_question_and_details = useContext(PollingContext);
     const poll_question = useContext(PollingContext);
-
+    const errorpoll = location.state.errorpoll
     const logout = async () => {
         await poll_question_and_details.userDetails.w3auth.logout();
         navigate('/')
@@ -32,7 +33,9 @@ function Thankpage() {
                             <div className="login-main-container">
                                 <div className="thankyou-wrapper">
                                     <div className="center"><img src={thanks} className="image" alt="thanks" /></div>
+                                
                                     <p className="img-para">Results will be announced soon!</p>
+                                    <p>{errorpoll}</p>
                                     <div className="center">
                                         <button className="btn btn-primary submit2" onClick={() => {
                                             navigate("/card")

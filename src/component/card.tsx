@@ -1,17 +1,14 @@
 
 import './card.css';
 import voteicon from "../assets/vvote.png"
-import React, { useRef } from "react";
-import Ract, { Component } from 'react'
+import React from "react";
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
-import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import SpritleLogo from "../assets/spritle_logo.png";
 import { useEffect, useState, } from "react";
-import Alert from 'react-popup-alert'
 import { Web3Auth } from "@web3auth/modal";
-import { WALLET_ADAPTERS, CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
+import {SafeEventEmitterProvider } from "@web3auth/base";
 import RPC from "../web3RPC";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -25,12 +22,12 @@ function Cards() {
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
   const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '' }, statement: '', candidates: [], expiring: '' })
-  const [poll_collection, setPoll_collection] = useState<{ statement: string, option: string[] }>({ statement: '', option: [] })
   const [role_id, setRole_id] = useState<null | number>(0)
   const [question, setQuestion] = useState("")
   const [option, setOption] = useState<Record<string, string>>({ '0': '', '1': '' });
-  const [status, setStatus] = useState<boolean>(true)
-
+  const [status, setStatus] = useState<boolean>(false)
+  const [auth, setAuth] = useState<{ statement: string, candidates: string[] }>()
+ 
   useEffect(() => {
     const opt = Object.values(option)
     setDetail(prev => ({
@@ -55,12 +52,11 @@ function Cards() {
         'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
       }
     }).then((res) => res.json()).then(data => {
-      console.log(data.polls.voted, "PPPPPP")
       setRole_id(data.role_id)
       setResuse(data.polls);
       console.log(data.polls, "polls,,")
     }).catch(err => console.log(err));
-  })
+  },[])
 
   function clk() {
     fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
@@ -103,7 +99,6 @@ function Cards() {
           <div className="col-sm-8">
             <div className="col-sm-12">
               <div className="row">
-
               </div>
             </div>
             <input type="text" name="option" className="form-control option-one" placeholder="Option " value={option['0']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '0': e.target.value })))} />
@@ -116,7 +111,6 @@ function Cards() {
                     <div className="col">
                       <div className="form-group">
                         <input type="text" name="option" className="form-control new-option" placeholder="Option " value={option[index + 2] || ''} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, [`${idx}`]: e.target.value })))} />
-
                       </div>
                     </div>
                     <div className="col">
@@ -175,6 +169,7 @@ function Cards() {
           </Modal.Footer>
         </Modal>
       </>
+
     );
   }
 
@@ -244,13 +239,14 @@ function Cards() {
     onShowAlert('success', privateKey, "Private Key");
   };
 
-  const handleclick = (id: number) => {
-    console.log(id, "index")
-    status ? (
-      console.log("jhjh")
-    ) : (navigate('/pole', { state: { id: id } }))
+  const handleclick =  (element: any) => {
+    if (element.voted || element.creator==poll_question_and_details.userDetails.usermail) {
+      navigate('/result',{state:{id:element.id}})
+    } else {
+       navigate('/pole', { state: {id:element.id,date:element.expiring} })
+    }
   }
-  console.log("status+++", status)
+
   return (
     <div>
       <div>
@@ -274,8 +270,8 @@ function Cards() {
                     return (
 
                       <div className='col-lg-4' key={id}>
-                        <div className="card p-3 mb-2 card3 " onClick={() => { setStatus(element.voted) }}  >
-                          <div onClick={() => { handleclick(element.id) }}>
+                        <div className="card p-3 mb-2 card3 "  >
+                          <div onClick={() => { handleclick(element) }}>
                             <div className="d-flex justify-content-between"  >
                               <div className="d-flex flex-row align-items-center"  >
                                 <div  > <img className='voteicon' src={voteicon} /></div>
@@ -283,7 +279,7 @@ function Cards() {
                                   <h6 className="mb-0"></h6> <span>{element.createdAt.split("T", 1)}</span>
                                 </div>
                               </div>
-                              <div className="badge"> <span>{element.voted == true && "voted" || "vote"}</span> </div>
+                              <div className="badge"> <span>{(element.voted == true) && "voted" || ((element.creator==poll_question_and_details.userDetails.usermail) && "owner" || "vote")}</span> </div>
                             </div>
                             <div className="mt-5 ">   <h6 className="heading ">{element.statement}</h6>
                               <p ></p>

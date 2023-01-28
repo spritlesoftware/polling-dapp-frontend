@@ -18,6 +18,7 @@ function Polling() {
     const [vote_detail, setVote_detail] = useState<{ contractId: number, user: { username: string, usermail: string, publickey: string, privatekey: string }, candidate: string }>({ contractId: 0, user: { username: '', usermail: '', publickey: '', privatekey: '' }, candidate: "" })
     const [option1, setOption1] = useState<string>('0');
     const [loading, setLoading] = useState(false)
+    let errorpoll:any=""
 
     const thank = (() => {
         submit()
@@ -33,7 +34,7 @@ function Polling() {
     const id = location.state.id
     const logout = async () => {
         await poll_question_and_details.userDetails.w3auth.logout();
-        navigate('/')
+        (navigate('/'))
     };
 
     function submit() {
@@ -67,7 +68,7 @@ function Polling() {
                 setLoading(true)
             }
             )
-        }).catch(err => console.log(err));
+        }).catch(err =>errorpoll=(err));
     }, [])
 
     const length1 = polling?.candidates.length

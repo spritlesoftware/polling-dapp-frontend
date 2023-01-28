@@ -11,6 +11,7 @@ import Polling from './component/Polling';
 import ListProvider from './Listcontext/listcontext';
 import Thankpage from './component/Thankpage';
 import Cards from './component/card';
+import Result from './component/Final';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,7 +26,7 @@ root.render(
       <Route path='' element={<App/>}></Route>  
       <Route path='/thankyou' element={<Thankpage/>}></Route>
       <Route path='/card' element={<Cards/>}></Route>
-     
+      <Route path='/result' element={<Result/>}></Route>
     </Routes>
     </div>
     </BrowserRouter>
