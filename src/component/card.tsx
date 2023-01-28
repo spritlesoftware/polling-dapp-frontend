@@ -60,7 +60,7 @@ function Cards() {
       setResuse(data.polls);
       console.log(data.polls, "polls,,")
     }).catch(err => console.log(err));
-  }, [])
+  })
 
   function clk() {
     fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
