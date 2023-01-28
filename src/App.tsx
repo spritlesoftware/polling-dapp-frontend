@@ -196,7 +196,7 @@ function App() {
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
     navigate('/card')
-  
+
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
@@ -307,9 +307,9 @@ function App() {
           <p className="vote1">Feel proud to be a voter anywhere, be ready to vote!</p>
         </div>
         <div className="col-lg-6 login" >
-       
+
           <div className="wel">
-          <img src={PollLogo} alt="PollLogo " className="poll-img second" />
+            <img src={PollLogo} alt="PollLogo " className="poll-img second" />
             <p className="welcome">Welcome!</p>
             <p className="welcome1">If you don't vote, you can't complain!
             </p>
