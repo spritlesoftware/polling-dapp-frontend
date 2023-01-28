@@ -13,8 +13,8 @@ import logins from "./assets/login.png"
 import Vote from "./assets/yellow.jpg"
 import { useNavigate } from "react-router-dom";
 
-const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
-
+const clientId = process.env.REACT_APP_WEB3AUTH_CLIENTID ? process.env.REACT_APP_WEB3AUTH_CLIENTID : "";
+const gcp_secret = process.env.REACT_APP_GCP_CLIENT_SECRET ? process.env.REACT_APP_GCP_CLIENT_SECRET : "";
 function App() {
   const poll_question_and_details: {
     poll_question: {
@@ -28,7 +28,8 @@ function App() {
     userDetails: {
       username: string;
       usermail: string;
-      rpc: any
+      rpc: any;
+      w3auth: any;
     },
   } = useContext(PollingContext);
 
@@ -74,7 +75,7 @@ function App() {
           },
           uiConfig: {
             loginMethodsOrder: ["google"],
-            appLogo: "https://www.spritle.com/images/logo.svg"
+            appLogo: process.env.REACT_APP_LOGIN_ADAP_LOGO
           },
         });
 
@@ -88,7 +89,7 @@ function App() {
                 name: "Custom Auth Login",
                 verifier: "spritle-google-testnet",
                 typeOfLogin: "google",
-                clientId: "855467495955-rlbt9fnev9r80j0h0848k05rov9hctmj.apps.googleusercontent.com",
+                clientId: gcp_secret,
               },
 
             },
@@ -184,10 +185,10 @@ function App() {
     };
 
     init();
+
   }, []);
 
   const login = async () => {
-    //  navigate('/card')
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
@@ -195,7 +196,7 @@ function App() {
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
     navigate('/card')
-    console.log(poll_question_and_details.userDetails, "userDetails-----------------------------")
+  
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
@@ -203,6 +204,7 @@ function App() {
     poll_question_and_details.userDetails.username = user_name;
     console.log(poll_question_and_details.userDetails.username, "username...............................")
     poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
+    poll_question_and_details.userDetails.w3auth = web3auth;
 
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
@@ -290,18 +292,7 @@ function App() {
     const privateKey = await rpc.getPrivateKey();
     onShowAlert('success', privateKey, "Private Key");
   };
-  function Createpoll() {
-    return (
-      <div>
-      </div>
 
-    )
-  }
-
-  const loggedInView = (
-    <>
-    </>
-  );
   const unloggedInView = (
     <div className="container-fluid cardpg">
 
@@ -336,7 +327,7 @@ function App() {
   return (
     <>
       <div>
-        {provider ? loggedInView : unloggedInView}
+        {unloggedInView}
       </div>
     </>
   );

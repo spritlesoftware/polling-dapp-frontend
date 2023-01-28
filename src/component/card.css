@@ -1,6 +1,6 @@
-body {
+/* body {
     background-color: #eee
-}
+} */
 .card {
     border: none;
     border-radius: 10px;
@@ -48,9 +48,9 @@ body {
     font-weight: 600
 }
 
-.text2 {
+/* .text2 {
     color: #a5aec0
-}
+} */
 .spritle-logo1{
     width: 16%;
     padding-top:2%;
@@ -72,3 +72,55 @@ body {
     width: 45%;
 
 }
+.option1{
+    width: 287px !important  ;
+    margin-left: 8%;
+    /* margin-top: 6%; */
+}
+
+.option2 {
+    margin-left: 8%;
+    margin-top: 5%;
+  }
+.add-options {
+    margin-top: 5%;
+    margin-left: 8%;
+}
+
+.option-one {
+    margin-left: 7%;
+    margin-bottom: 6%;
+}
+.new-option {
+    width: 220%;
+    margin-left: 15%;
+}
+.remove {
+    margin-left: 129%;
+}
+  
+/* .cards1 {
+    background-color: lavender;
+}
+   */
+
+   /* .cards {
+    background-color: whitesmoke;
+   } */
+   .card3 {
+    background-color: whitesmoke;
+   }
+   .card3.card3:hover{
+    background-color: lavender;
+  }
+  /* .cards.cards:hover{
+    background-color: yellow;
+  } */
+
+  .poll-create1 {
+    width: 34px;
+    line-height: 2;
+    margin-left: 6%;
+  }
+
+
