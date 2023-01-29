@@ -1,6 +1,5 @@
-import { Web3Auth } from '@web3auth/modal';
 import React, { createContext,  } from 'react';
-import { useEffect, useState ,useContext} from "react";
+import { useState } from "react";
 import "../App.css";
 const clientId = "BO_fSxnxQUgm7OW9FgRGzU2ID0PPDAfFLgftNxsjFZkDgS-KwasdSt8opMKjB1eY6ouoDvHtv2gl1u7xrlBeksc";
 
@@ -22,6 +21,7 @@ interface pollingContextInterface {poll_question: {
         console.log(userDetails,"userDetails")
         const [poll_question,setPoll_question] = useState([])
         const [collect,setCollect]=useState([])
+        const [status, setStatus] = useState<number>(0)
         return <PollingContext.Provider value={{poll_question: poll_question,setPoll_question, userDetails: userDetails,collect:collect,setCollect}}>
             {children}
         </PollingContext.Provider>

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import SpritleLogo from "../assets/spritle_logo.png";
 import { useEffect } from "react";
 import Spinner from 'react-bootstrap/Spinner';
+import Button from 'react-bootstrap/Button';
 
 function Polling() {
     const navigate = useNavigate();
@@ -109,10 +110,28 @@ function Polling() {
                                 </div>
                             </div>
                         </div>
-                    ) : (
-                        <Spinner animation="border" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
+                    ) : (<>
+                        <Button variant="primary" disabled>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                      </Button>{' '}
+                      <Button variant="primary" disabled>
+                        <Spinner
+                          as="span"
+                          animation="grow"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        Loading...
+                      </Button>
+                    </>
                     )
                 }
             </>

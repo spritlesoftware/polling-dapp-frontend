@@ -12,10 +12,10 @@ function Thankpage() {
     const location = useLocation();
     const poll_question_and_details = useContext(PollingContext);
     const poll_question = useContext(PollingContext);
-    const errorpoll = location.state.errorpoll
     const logout = async () => {
         await poll_question_and_details.userDetails.w3auth.logout();
         navigate('/')
+        console.log("&&&&&&&&&&&&&&&")
     };
     return (
         <>
@@ -26,16 +26,13 @@ function Thankpage() {
                 <div className="col-lg-6">
                     <button onClick={logout} className="btn btn-primary logout-polling">Logout</button>
                 </div>
-
                 <section className="login-main-wrapper">
                     <div className="main-container">
                         <div className="login-process">
                             <div className="login-main-container">
                                 <div className="thankyou-wrapper">
                                     <div className="center"><img src={thanks} className="image" alt="thanks" /></div>
-                                
                                     <p className="img-para">Results will be announced soon!</p>
-                                    <p>{errorpoll}</p>
                                     <div className="center">
                                         <button className="btn btn-primary submit2" onClick={() => {
                                             navigate("/card")

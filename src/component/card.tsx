@@ -18,16 +18,15 @@ import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 function Cards() {
   const navigate = useNavigate();
   const poll_question_and_details = useContext(PollingContext);
-  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number, statement: string }[]>([])
+  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number,expiring:string,statement: string }[]>([])
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
   const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '' }, statement: '', candidates: [], expiring: '' })
   const [role_id, setRole_id] = useState<null | number>(0)
   const [question, setQuestion] = useState("")
   const [option, setOption] = useState<Record<string, string>>({ '0': '', '1': '' });
-  const [status, setStatus] = useState<boolean>(false)
-  const [auth, setAuth] = useState<{ statement: string, candidates: string[] }>()
- 
+  const [status, setStatus] = useState<number>(0)
+     
   useEffect(() => {
     const opt = Object.values(option)
     setDetail(prev => ({
@@ -158,7 +157,7 @@ function Cards() {
               </Form.Group>
             </Form>
             <div>
-              <input type="date" onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: question, candidates: [], expiring: e.target.value }))} />
+              <input type="date" className='date' onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: question, candidates: [], expiring: e.target.value }))} />
             </div>
             {AddRemoveInputField()}
           </Modal.Body>
@@ -241,12 +240,11 @@ function Cards() {
 
   const handleclick =  (element: any) => {
     if (element.voted || element.creator==poll_question_and_details.userDetails.usermail) {
-      navigate('/result',{state:{id:element.id}})
+      navigate('/result',{state:{id:element.id,date:element.expiring}})
     } else {
        navigate('/pole', { state: {id:element.id,date:element.expiring} })
     }
   }
-
   return (
     <div>
       <div>
@@ -276,7 +274,7 @@ function Cards() {
                               <div className="d-flex flex-row align-items-center"  >
                                 <div  > <img className='voteicon' src={voteicon} /></div>
                                 <div className="ms-2 c-details">
-                                  <h6 className="mb-0"></h6> <span>{element.createdAt.split("T", 1)}</span>
+                                  <h6 className="mb-0"></h6> <span>Expiring on: {element.expiring}</span>
                                 </div>
                               </div>
                               <div className="badge"> <span>{(element.voted == true) && "voted" || ((element.creator==poll_question_and_details.userDetails.usermail) && "owner" || "vote")}</span> </div>
