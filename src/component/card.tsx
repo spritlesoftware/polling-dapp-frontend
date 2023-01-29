@@ -1,4 +1,3 @@
-
 import './card.css';
 import voteicon from "../assets/vvote.png"
 import React from "react";
@@ -15,6 +14,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Remove from "../assets/Close.png";
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
+
 function Cards() {
   const navigate = useNavigate();
   const poll_question_and_details = useContext(PollingContext);
@@ -34,8 +34,9 @@ function Cards() {
     }))
   }, [option])
   useEffect(() => {
-    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: question, candidates: [], expiring: "" })
+    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement:question, candidates: [], expiring: "" })
   }, [])
+  console.log(detail,"details...............")
 
   useEffect(() => {
     console.log(poll_question_and_details, "context data")
@@ -58,6 +59,9 @@ function Cards() {
   },[])
 
   function clk() {
+    if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "True" ) {
+      
+    }
     fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
       method: 'POST',
       body: JSON.stringify(
@@ -153,7 +157,7 @@ function Cards() {
 
             <Form>
               <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                <Form.Control as="textarea" value={option.candidates} onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: e.target.value, candidates: [], expiring: "" }))} className='text-area1' placeholder='Enter your question' rows={3} />
+                <Form.Control as="textarea" value={option.candidates}  onChange={((e: any) => setQuestion(e.target.value))} className='text-area1' placeholder='Enter your question' rows={3} />
               </Form.Group>
             </Form>
             <div>
