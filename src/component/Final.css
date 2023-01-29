@@ -1,0 +1,33 @@
+.result {
+    margin-left: 91%;
+    margin-top: 5%;
+}
+
+.logout {
+    margin-top: 6%;
+    margin-left: 70%;
+}
+
+.val1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -5%;
+}
+
+.val2 {
+    margin-left: 39%;
+}
+
+.thumb {
+    width: 10%;
+}
+
+.winner {
+    margin-top: 2%;
+}
+
+.back {
+    width: 11%;
+    margin-left: 43%;
+}

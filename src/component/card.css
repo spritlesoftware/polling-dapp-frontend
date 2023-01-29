@@ -1,16 +1,15 @@
-/* body {
-    background-color: #eee
-} */
 .card {
     border: none;
     border-radius: 10px;
-    height: 96% !important ;
-    color: black !important   
+    height: 96%;
+    color: black !important
 }
+
 .c-details span {
     font-weight: 300;
     font-size: 13px
 }
+
 .icon {
     width: 50px;
     height: 50px;
@@ -23,13 +22,13 @@
 }
 
 .badge span {
-    background-color: #fffbec;
+    background-color: #ecfff2;
     width: 60px;
     height: 25px;
     padding-bottom: 3px;
     border-radius: 5px;
     display: flex;
-    color: #fed85d;
+    color: #f1350f;
     justify-content: center;
     align-items: center
 }
@@ -48,40 +47,22 @@
     font-weight: 600
 }
 
-/* .text2 {
-    color: #a5aec0
-} */
-.spritle-logo1{
+.spritle-logo1 {
     width: 16%;
-    padding-top:2%;
-    padding-left:2%
-}
-
-.logout-button{
-    padding-left: 30%;
     padding-top: 2%;
-    /* width: 43%; */
+    padding-left: 2%
+}
 
-}
-.createpollbtn {
-    margin-right: 4%;
-    width: 45%;
-     
-}
-.logout {
-    width: 45%;
-
-}
-.option1{
-    width: 287px !important  ;
+.option1 {
+    width: 287px !important;
     margin-left: 8%;
-    /* margin-top: 6%; */
 }
 
 .option2 {
     margin-left: 8%;
     margin-top: 5%;
-  }
+}
+
 .add-options {
     margin-top: 5%;
     margin-left: 8%;
@@ -91,36 +72,41 @@
     margin-left: 7%;
     margin-bottom: 6%;
 }
+
 .new-option {
     width: 220%;
     margin-left: 15%;
 }
+
 .remove {
     margin-left: 129%;
 }
-  
-/* .cards1 {
+
+.card3 {
+    background-color: whitesmoke;
+}
+
+.card3.card3:hover {
     background-color: lavender;
 }
-   */
 
-   /* .cards {
-    background-color: whitesmoke;
-   } */
-   .card3 {
-    background-color: whitesmoke;
-   }
-   .card3.card3:hover{
-    background-color: lavender;
-  }
-  /* .cards.cards:hover{
-    background-color: yellow;
-  } */
-
-  .poll-create1 {
-    width: 34px;
+.poll-create1 {
     line-height: 2;
     margin-left: 6%;
-  }
+    margin-top: 8%;
+}
 
+.logout3 {
+    margin-left: 86%;
+    margin-top: 4%;
+}
 
+.logout5 {
+    margin-left: 15%;
+    margin-top: 8%;
+}
+
+.date {
+    margin-left: 7%;
+    margin-bottom: 4%;
+}
