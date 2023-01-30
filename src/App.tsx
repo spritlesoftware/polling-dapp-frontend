@@ -65,6 +65,10 @@ function App() {
   var balance = "";
 
   useEffect(() => {
+    if (provider) {
+      console.log("inside");
+      login();
+    }
     const init = async () => {
       try {
         const web3auth = new Web3Auth({
@@ -186,7 +190,7 @@ function App() {
 
     init();
 
-  }, []);
+  }, [provider]);
 
   const login = async () => {
     if (!web3auth) {
@@ -195,8 +199,6 @@ function App() {
     }
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
-    navigate('/card')
-
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
@@ -210,6 +212,8 @@ function App() {
       const rpc = new RPC(web3authProvider);
       balance = await rpc.getBalance();
       poll_question_and_details.userDetails.rpc = rpc;
+
+      navigate('/card');
     }
   };
 

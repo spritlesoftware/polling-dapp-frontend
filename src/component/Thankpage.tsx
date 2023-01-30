@@ -13,9 +13,11 @@ function Thankpage() {
     const poll_question_and_details = useContext(PollingContext);
     const poll_question = useContext(PollingContext);
     const logout = async () => {
-        await poll_question_and_details.userDetails.w3auth.logout();
-        navigate('/')
-        console.log("&&&&&&&&&&&&&&&")
+        try {
+            localStorage.removeItem('openlogin_store');
+            localStorage.removeItem('Web3Auth-cachedAdapter');
+            navigate('/');
+        } catch(err) {console.log(err)};
     };
     return (
         <>
