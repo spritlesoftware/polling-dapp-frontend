@@ -12,6 +12,7 @@ import ListProvider from './Listcontext/listcontext';
 import Thankpage from './component/Thankpage';
 import Cards from './component/card';
 import Result from './component/Final';
+import Nobalance from './component/Nobalance'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -27,6 +28,7 @@ root.render(
       <Route path='/thankyou' element={<Thankpage/>}></Route>
       <Route path='/card' element={<Cards/>}></Route>
       <Route path='/result' element={<Result/>}></Route>
+      <Route path='/nobalance' element={<Nobalance/>}></Route>
     </Routes>
     </div>
     </BrowserRouter>

@@ -23,13 +23,15 @@ function Result() {
     const date = location.state.date
 
     const logout = async () => {
-        await poll_question_and_details.userDetails.w3auth.logout();
-        navigate('/')
+        try {
+            localStorage.removeItem('openlogin_store');
+            localStorage.removeItem('Web3Auth-cachedAdapter');
+            navigate('/');
+        } catch (err) { console.log(err) };
     };
-    // console.log(date,"date")
 
     useEffect(() => {
-        fetch(process.env.REACT_APP_BACKEND + "/api/test-collections/" +element+ "?fields[0]=result", {
+        fetch(process.env.REACT_APP_BACKEND + "/api/test-collections/" + element + "?fields[0]=result", {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -40,76 +42,74 @@ function Result() {
                 console.log("result: ", element.data.attributes.result);
                 setVals(element.data.attributes.result);
                 setLoading(true);
-
             }
             )
-            
         }).catch(err => console.log(err));
     }, [])
 
     return (
         <>
-                {
-                    loading ? (
-        <div>
-            <div className="row">
-                <div className="col-lg-6 first">
-                    <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-polling" />
-                </div>
-                <div className="col-lg-6">
-                    <button onClick={logout} className="btn btn-primary logout-polling">Logout</button>
-                </div>
-                <div>
-                    
-                    {
-                        vals === null && (
-                            <div className="val1">
-                                <div className=""><img src={Announcement} className="announce" alt="thanks" />  </div>
-                                <div className="thankyou-wrapper">
-                                    <p className="">Poll will be expiring on {date} </p>
-                                    <p>Results will be announced after the expiry date</p>
-                                        <button className="btn btn-primary back"onClick={() => { navigate("/card")}}>Back to Vote</button>
-                                </div>
+            {
+                loading ? (
+                    <div>
+                        <div className="row">
+                            <div className="col-lg-6 first">
+                                <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-polling" />
                             </div>
-                        )
-                    }
-                </div>
-                {
-                    vals !== null && (
-                        <div className="val2">
-                            <div className=""><img src={Thumbsup} className="thumb" alt="thanks" /></div>
-                            <p className="winner">The winner is {vals}</p>
-                            <button className="btn btn-primary" onClick={() => {navigate("/card")}}>Back to Vote</button>
+                            <div className="col-lg-6">
+                                <button onClick={logout} className="btn btn-primary logout-polling">Logout</button>
+                            </div>
+                            <div>
+
+                                {
+                                    vals === null && (
+                                        <div className="val1">
+                                            <div className=""><img src={Announcement} className="announce" alt="thanks" />  </div>
+                                            <div className="thankyou-wrapper">
+                                                <p className="">Poll will be expiring on {date} </p>
+                                                <p>Results will be announced after the expiry date</p>
+                                                <button className="btn btn-primary back" onClick={() => { navigate('/card') }}>Back</button>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                            {
+                                vals !== null && (
+                                    <div className="val2">
+                                        <div className=""><img src={Thumbsup} className="thumb" alt="thanks" /></div>
+                                        <p className="winner">The winner is {vals}</p>
+                                        <button className="btn btn-primary" onClick={() => { navigate("/card") }}>Back to Vote</button>
+                                    </div>
+                                )
+                            }
                         </div>
-                    )
-                }
-            </div>
-        </div>
-         ):(  <>
-            <Button variant="primary" disabled>
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            <span className="visually-hidden">Loading...</span>
-          </Button>{' '}
-          <Button variant="primary" disabled>
-            <Spinner
-              as="span"
-              animation="grow"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            Loading...
-          </Button>
+                    </div>
+                ) : (<>
+                    <Button variant="primary" disabled>
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                    </Button>{' '}
+                    <Button variant="primary" disabled>
+                        <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        />
+                        Loading...
+                    </Button>
+                </>
+                )
+            }
         </>
     )
-}
-</>
-)
 }
 export default Result

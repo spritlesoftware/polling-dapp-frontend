@@ -3,43 +3,91 @@ import voteicon from "../assets/vvote.png"
 import React from "react";
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
-import { useNavigate } from "react-router-dom";
+import { Route, useLocation, useNavigate } from "react-router-dom";
 import SpritleLogo from "../assets/spritle_logo.png";
 import { useEffect, useState, } from "react";
 import { Web3Auth } from "@web3auth/modal";
-import {SafeEventEmitterProvider } from "@web3auth/base";
+import { SafeEventEmitterProvider } from "@web3auth/base";
 import RPC from "../web3RPC";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Amount from '../assets/Amount1.png'
+import Email from '../assets/Email.png'
+import Key from '../assets/Key.png'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import Remove from "../assets/Close.png";
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
+import Spinner from 'react-bootstrap/Spinner';
 
 function Cards() {
   const navigate = useNavigate();
   const poll_question_and_details = useContext(PollingContext);
-  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number,expiring:string,statement: string }[]>([])
+  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number, expiring: string, statement: string }[]>([])
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '' }, statement: '', candidates: [], expiring: '' })
+  const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string, balance: any, profile: any }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: 0, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' })
   const [role_id, setRole_id] = useState<null | number>(0)
   const [question, setQuestion] = useState("")
   const [option, setOption] = useState<Record<string, string>>({ '0': '', '1': '' });
   const [status, setStatus] = useState<number>(0)
-     
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const { state } = useLocation()
+
+  const User_detail = () => {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    return (
+      <>
+        <img src={poll_question_and_details.userDetails.profile} className="profile-img" onClick={handleShow} alt="img" />
+        <Modal show={show} onHide={handleClose}>
+          <ModalHeader closeButton>
+            <Modal.Title>{detail.user.username}</Modal.Title>
+          </ModalHeader>
+          <ModalBody>
+            <p>
+              <img src={Email} className="Email" /> {detail.user.usermail}
+            </p>
+            <p>
+              <img src={Key} className="Key" /> {detail.user.publickey}
+            </p>
+            <p>
+              <img src={Amount} className="Email" /> {detail.user.balance}
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </>
+    );
+  };
+
   useEffect(() => {
     const opt = Object.values(option)
     setDetail(prev => ({
       ...prev, candidates: opt
     }))
   }, [option])
-  useEffect(() => {
-    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement:question, candidates: [], expiring: "" })
-  }, [])
-  console.log(detail,"details...............")
 
   useEffect(() => {
-    console.log(poll_question_and_details, "context data")
+    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: poll_question_and_details.userDetails.publickey, privatekey: poll_question_and_details.userDetails.privatekey, balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: question, candidates: [], expiring: "" })
+  }, [])
+  const length: number = resuse.length
+
+  const myrole = async () => {
+    if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true") {
+      detail.user.privatekey = poll_question_and_details.userDetails.privatekey;
+      detail.user.publickey = poll_question_and_details.userDetails.publickey;
+      detail.user.balance = poll_question_and_details.userDetails.balance;
+    }
+
     fetch(process.env.REACT_APP_BACKEND + "/api/myRole", {
       method: 'POST',
       body: JSON.stringify({
@@ -51,17 +99,25 @@ function Cards() {
         'Content-type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
       }
-    }).then((res) => res.json()).then(data => {
-      setRole_id(data.role_id)
-      setResuse(data.polls);
-      console.log(data.polls, "polls,,")
-    }).catch(err => console.log(err));
-  },[])
-
-  function clk() {
-    if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "True" ) {
-      
     }
+    )
+      .then(res => res.json())
+      .then(data => {
+        setRole_id(data.role_id);
+        setResuse(data.polls);
+        setLoading(false);
+      })
+      .catch(err => console.log(err));
+
+  }
+  useEffect(() => {
+    myrole();
+  }, []);
+
+  async function clk() {
+
+    setLoading(true);
+    console.log(loading,"loading")
     fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
       method: 'POST',
       body: JSON.stringify(
@@ -72,7 +128,9 @@ function Cards() {
         'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
       }
     }).then((res) => res.json()).then(data => {
+      myrole();
     }).catch(err => console.log(err));
+    handleClose()
   }
 
   function AddRemoveInputField() {
@@ -96,7 +154,6 @@ function Cards() {
     }
 
     return (
-
       <div className="container">
         <div className="row">
           <div className="col-sm-8">
@@ -130,23 +187,22 @@ function Cards() {
         </div>
       </div>
     )
+
   }
 
   function Create_poll() {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+
     return (
       <>
         {
           role_id === 1 &&
-          (<Button variant="primary" className="createbtn  logout5" onClick={handleShow}>
+          (<Button variant="primary" className="createbtn" onClick={handleShow}>
             Create Poll
           </Button>)
         }
         {
           role_id !== 1 &&
-          (<p className='badge rounded-pill bg-dark poll-create1'>{poll_question_and_details.userDetails.username}</p>)
+          (<p></p>)
         }
 
         <Modal show={show} onHide={handleClose}>
@@ -157,11 +213,11 @@ function Cards() {
 
             <Form>
               <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                <Form.Control as="textarea" value={option.candidates}  onChange={((e: any) => setQuestion(e.target.value))} className='text-area1' placeholder='Enter your question' rows={3} />
+                <Form.Control as="textarea" value={option.candidates} onChange={((e: any) => setQuestion(e.target.value))} className='text-area1' placeholder='Enter your question' rows={3} />
               </Form.Group>
             </Form>
             <div>
-              <input type="date" className='date' onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, statement: question, candidates: [], expiring: e.target.value }))} />
+              <input type="date" className='date' onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: poll_question_and_details.userDetails.publickey, privatekey: poll_question_and_details.userDetails.privatekey, balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: question, candidates: [], expiring: e.target.value }))} />
             </div>
             {AddRemoveInputField()}
           </Modal.Body>
@@ -172,8 +228,8 @@ function Cards() {
           </Modal.Footer>
         </Modal>
       </>
-
     );
+
   }
 
   const [alert, setAlert] = useState({
@@ -202,8 +258,11 @@ function Cards() {
   }
 
   const logout = async () => {
-    await poll_question_and_details.userDetails.w3auth.logout();
-    navigate('/')
+    try {
+      localStorage.removeItem('openlogin_store');
+      localStorage.removeItem('Web3Auth-cachedAdapter');
+      navigate('/');
+    } catch (err) { console.log(err) };
   };
 
   const getChainId = async (_provider: SafeEventEmitterProvider) => {
@@ -222,6 +281,7 @@ function Cards() {
     const rpc = new RPC(_provider);
     const balance = await rpc.getBalance();
     onShowAlert('success', balance, "Balance");
+
   };
 
   const sendTransaction = async (_provider: SafeEventEmitterProvider) => {
@@ -236,19 +296,26 @@ function Cards() {
     onShowAlert('success', "{msg: \"helloworld msg\", password: \"mypwd\"} is: " + signedMessage, "SignedMessage for");
   };
 
-  const getPrivateKey = async (_provider: SafeEventEmitterProvider) => {
+  const getPrivatekey = async (_provider: SafeEventEmitterProvider) => {
     const rpc = new RPC(_provider);
     const privateKey = await rpc.getPrivateKey();
     onShowAlert('success', privateKey, "Private Key");
   };
 
-  const handleclick =  (element: any) => {
-    if (element.voted || element.creator==poll_question_and_details.userDetails.usermail) {
-      navigate('/result',{state:{id:element.id,date:element.expiring}})
-    } else {
-       navigate('/pole', { state: {id:element.id,date:element.expiring} })
+  const handleclick = (element: any) => {
+    if (detail.user.balance <= 0) {
+      console.log("hai")
+      navigate('/nobalance')
+    }
+    else if (element.voted || element.creator == poll_question_and_details.userDetails.usermail) {
+      navigate('/result', { state: { id: element.id, date: element.expiring } })
+    }
+
+    else {
+      navigate('/pole', { state: { id: element.id, date: element.expiring } })
     }
   }
+
   return (
     <div>
       <div>
@@ -256,21 +323,23 @@ function Cards() {
           <div className="col-lg-6 first">
             <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo1" />
           </div>
-          <div className="col-lg-4 ">
-            <button onClick={logout} className="btn btn-primary logout3">Logout</button>
-          </div>
-          <div className="col-lg-2 ">
+          <div className="col-lg-4 logout-button">
             {Create_poll()}
+          </div>
+          <div className="col-lg-2 buttons">
+            <button onClick={logout} className="btn btn-primary logout-test">Logout</button>
+            {User_detail()}
           </div>
         </div>
         <div>
           <div className="container mt-5 mb-3">
             <div className="row">
               {
-                resuse.length != 0 && (
+                loading ? (
+                  <Spinner animation="border" />
+                ) : (
                   resuse.map((element, id) => {
                     return (
-
                       <div className='col-lg-4' key={id}>
                         <div className="card p-3 mb-2 card3 "  >
                           <div onClick={() => { handleclick(element) }}>
@@ -281,7 +350,7 @@ function Cards() {
                                   <h6 className="mb-0"></h6> <span>Expiring on: {element.expiring}</span>
                                 </div>
                               </div>
-                              <div className="badge"> <span>{(element.voted == true) && "voted" || ((element.creator==poll_question_and_details.userDetails.usermail) && "owner" || "vote")}</span> </div>
+                              <div className="badge"> <span>{(element.voted == true) && "voted" || ((element.creator == poll_question_and_details.userDetails.usermail) && "owner" || "vote")}</span> </div>
                             </div>
                             <div className="mt-5 ">   <h6 className="heading ">{element.statement}</h6>
                               <p ></p>

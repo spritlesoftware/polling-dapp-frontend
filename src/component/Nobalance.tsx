@@ -1,17 +1,12 @@
 import React from "react";
-import '../App.css'
-import thanks from "../assets/thanks1.png"
-import { useNavigate } from "react-router-dom";
+import Money from "../assets/money.jpg"
 import SpritleLogo from "../assets/spritle_logo.png"
-import { useContext } from "react";
-import { PollingContext } from "../Listcontext/listcontext";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-function Thankpage() {
+function Nobalance() {
     var navigate = useNavigate()
     const location = useLocation();
-    const poll_question_and_details = useContext(PollingContext);
-    const poll_question = useContext(PollingContext);
     const logout = async () => {
         try {
             localStorage.removeItem('openlogin_store');
@@ -33,12 +28,12 @@ function Thankpage() {
                         <div className="login-process">
                             <div className="login-main-container">
                                 <div className="thankyou-wrapper">
-                                    <div className="center"><img src={thanks} className="image" alt="thanks" /></div>
-                                    <p className="img-para">Results will be announced soon!</p>
+                                    <div className="center"><img src={Money} className="image" alt="thanks" /></div>
+                                    <p className="img-para">you don't have a goerli.etherscan balance</p>
                                     <div className="center">
                                         <button className="btn btn-primary submit2" onClick={() => {
-                                            navigate("/card")
-                                        }}>Back to Vote</button>
+                                            navigate('/card')
+                                        }}>Back</button>
                                     </div>
                                     <div className="clr"></div>
                                 </div>
@@ -52,4 +47,4 @@ function Thankpage() {
         </>
     )
 }
-export default Thankpage
+export default Nobalance

@@ -49,9 +49,14 @@
 
 .spritle-logo1 {
     width: 16%;
-    padding-top: 2%;
-    padding-left: 2%
+
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-top: 4%;
+
 }
+
 
 .option1 {
     width: 287px !important;
@@ -109,4 +114,53 @@
 .date {
     margin-left: 7%;
     margin-bottom: 4%;
+}
+
+.buttons {
+    /* margin-top: 2%; */
+    margin-left: -5%;
+}
+
+.logout-test {
+    margin-left: 20%;
+    /* margin-top: 6%; */
+
+
+}
+
+.user {
+    margin-left: 7%;
+}
+
+.ok {
+    margin-right: 44%;
+}
+
+.Email {
+    width: 10%;
+}
+
+.Key {
+    width: 13%;
+}
+
+.profile-img {
+    margin-left: 6%;
+    border: aliceblue;
+    border-radius: 79px;
+    width: 18%;
+
+}
+
+.createbtn {
+
+    margin-left: 67%;
+
+}
+
+.cards1 {
+    display: flex;
+    color: #f1350f;
+    justify-content: center;
+    align-items: center
 }

@@ -1,15 +1,12 @@
 import { useEffect, useState, useContext } from "react";
-import Alert from 'react-popup-alert'
 import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS, CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import RPC from "./web3RPC"
 import "./App.css";
-import Card from "./component/card";
 import { PollingContext } from "./Listcontext/listcontext";
 import SpritleLogo from "./assets/spritle_logo.png"
 import PollLogo from "./assets/votelogo.png"
-import logins from "./assets/login.png"
 import Vote from "./assets/yellow.jpg"
 import { useNavigate } from "react-router-dom";
 
@@ -30,11 +27,16 @@ function App() {
       usermail: string;
       rpc: any;
       w3auth: any;
-    },
+      privatekey: any;
+      publickey: any;
+      balance: any
+      profile: any
+    }, imageUrl: any
   } = useContext(PollingContext);
 
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [alert, setAlert] = useState({
     header: 'header',
@@ -62,7 +64,7 @@ function App() {
   }
 
   var user_name = "";
-  var balance = "";
+  var profile: any = "";
 
   useEffect(() => {
     if (provider) {
@@ -202,18 +204,18 @@ function App() {
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
-
+    profile = user.profileImage
+    poll_question_and_details.userDetails.profile = profile;
     poll_question_and_details.userDetails.username = user_name;
-    console.log(poll_question_and_details.userDetails.username, "username...............................")
     poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
     poll_question_and_details.userDetails.w3auth = web3auth;
 
+
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
-      balance = await rpc.getBalance();
+      var balance = await rpc.getBalance();
       poll_question_and_details.userDetails.rpc = rpc;
-
-      navigate('/card');
+      navigate('/card', { state: { imageUrl: poll_question_and_details.userDetails.profile, accessToken: user.oAuthAccessToken } })
     }
   };
 
@@ -245,6 +247,7 @@ function App() {
     const rpc = new RPC(provider);
     const chainId = await rpc.getChainId();
     onShowAlert('success', chainId, "Chain-ID");
+
   };
 
   const getAccounts = async () => {
@@ -255,7 +258,10 @@ function App() {
     const rpc = new RPC(provider);
     const address = await rpc.getAccounts();
     onShowAlert('success', String(address), "Public Address");
+    poll_question_and_details.userDetails.publickey = address;
   };
+
+  getAccounts()
 
   const getBalance = async () => {
     if (!provider) {
@@ -265,7 +271,10 @@ function App() {
     const rpc = new RPC(provider);
     const balance = await rpc.getBalance();
     onShowAlert('success', balance, "Balance");
+    poll_question_and_details.userDetails.balance = balance;
+
   };
+  getBalance()
 
   const sendTransaction = async () => {
     if (!provider) {
@@ -287,31 +296,28 @@ function App() {
     onShowAlert('success', "{msg: \"helloworld msg\", password: \"mypwd\"} is: " + signedMessage, "SignedMessage for");
   };
 
-  const getPrivateKey = async () => {
+  const getPrivatekey = async () => {
     if (!provider) {
       console.log("provider not initialized yet");
       return;
     }
     const rpc = new RPC(provider);
-    const privateKey = await rpc.getPrivateKey();
-    onShowAlert('success', privateKey, "Private Key");
+    const privatekey = await rpc.getPrivateKey();
+    onShowAlert('success', privatekey, "Private Key");
+    poll_question_and_details.userDetails.privatekey = privatekey;
   };
-
+  console.log(getPrivatekey())
   const unloggedInView = (
     <div className="container-fluid cardpg">
-
       <div className="row">
         <div className="col-lg-6 first-first">
-
           <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo" />
           <img src={Vote} alt="PollLogo " className="yellow" />
-
           <p className="company_title text">Make your vote count!
           </p>
           <p className="vote1">Feel proud to be a voter anywhere, be ready to vote!</p>
         </div>
         <div className="col-lg-6 login" >
-
           <div className="wel">
             <img src={PollLogo} alt="PollLogo " className="poll-img second" />
             <p className="welcome">Welcome!</p>

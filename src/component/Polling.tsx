@@ -34,11 +34,20 @@ function Polling() {
 
     const id = location.state.id
     const logout = async () => {
-        await poll_question_and_details.userDetails.w3auth.logout();
-        (navigate('/'))
+        try {
+            localStorage.removeItem('openlogin_store');
+            localStorage.removeItem('Web3Auth-cachedAdapter');
+            navigate('/');
+        } catch(err) {console.log(err)};
     };
 
-    function submit() {
+    const submit = async () => {
+
+        if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true" ) {
+            vote_detail.user.privatekey = await poll_question_and_details.userDetails.rpc.getPrivateKey();
+            console.log( vote_detail.user.privatekey ,"check")
+            console.log(vote_detail,"vote detail")
+          }
         fetch(process.env.REACT_APP_BACKEND + "/api/votingC_vote", {
             method: 'POST',
             body: JSON.stringify(

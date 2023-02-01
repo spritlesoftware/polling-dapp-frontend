@@ -11,18 +11,20 @@ interface pollingContextInterface {poll_question: {
         vote: number;
     }[],
         setPoll_question:Function,
-        userDetails: {username:string;usermail:string;rpc:any; w3auth:any},collect:{count:number}[],setCollect:Function}
+        userDetails: {username:string;usermail:string;rpc:any; w3auth:any; privatekey:any;publickey:any;balance:any,profile:any},imageUrl:any}
     
     export const PollingContext = createContext<pollingContextInterface>({poll_question: [],setPoll_question: () => {},
-     userDetails: {username: '', usermail: '', rpc:{}, w3auth: {}},collect:[],setCollect:()=>{}})
+     userDetails: {username: '', usermail: '', rpc:{}, w3auth: {},privatekey:'',publickey:'',balance:'',profile:''},imageUrl:''})
     
     const ListProvider = ({children}: React.PropsWithChildren) => {
-        const userDetails={  username: "", usermail: "", rpc: {}, w3auth: ""}
+        const userDetails={  username: "", usermail: "", rpc: {}, w3auth: "",privatekey:'',publickey:'',balance:'',profile:''}
         console.log(userDetails,"userDetails")
         const [poll_question,setPoll_question] = useState([])
         const [collect,setCollect]=useState([])
+        const imageUrl:any=""
+
         const [status, setStatus] = useState<number>(0)
-        return <PollingContext.Provider value={{poll_question: poll_question,setPoll_question, userDetails: userDetails,collect:collect,setCollect}}>
+        return <PollingContext.Provider value={{poll_question: poll_question,setPoll_question, userDetails: userDetails,imageUrl}}>
             {children}
         </PollingContext.Provider>
     }
