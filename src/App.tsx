@@ -228,16 +228,14 @@ function App() {
     if (user.name)
       onShowAlert('success', "Name: " + user.name, "User Details");
   };
-
   const logout = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    await web3auth.logout();
-    setProvider(null);
+    try {
+        localStorage.removeItem('openlogin_store');
+        localStorage.removeItem('Web3Auth-cachedAdapter');
+        navigate('/');
+    } catch (err) { console.log(err) };
+};
 
-  };
 
   const getChainId = async () => {
     if (!provider) {
@@ -306,7 +304,7 @@ function App() {
     onShowAlert('success', privatekey, "Private Key");
     poll_question_and_details.userDetails.privatekey = privatekey;
   };
-  console.log(getPrivatekey())
+  getPrivatekey()
   const unloggedInView = (
     <div className="container-fluid cardpg">
       <div className="row">

@@ -1,5 +1,5 @@
 import React from "react";
-import Money from "../assets/money.jpg"
+import Money from "../assets/dollar.png"
 import SpritleLogo from "../assets/spritle_logo.png"
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -48,3 +48,6 @@ function Nobalance() {
     )
 }
 export default Nobalance
+
+
+
