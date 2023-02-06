@@ -274,7 +274,7 @@ form {
 .login {
   background-color: lightsteelblue;
   display: flex;
-  padding: 10%;
+  padding: 9%;
   flex-direction: column;
   justify-content: space-between;
 }
@@ -424,11 +424,6 @@ form {
   margin-top: 8%;
   margin-left: 72%;
 }
-
-.col-lg-6 {
-  padding-bottom: 3%;
-}
-
 .form-control {
   height: 40px;
   box-shadow: none;

@@ -10,8 +10,6 @@ import { useEffect } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 
-import toastr from "toastr";
-
 function Polling() {
     const navigate = useNavigate();
     const poll_question_and_details = useContext(PollingContext);
@@ -20,7 +18,7 @@ function Polling() {
     const [polling, setPolling] = useState<{ statement: string, candidates: string[] }>()
     const [vote_detail, setVote_detail] = useState<{ contractId: number, user: { username: string, usermail: string, publickey: string, privatekey: string }, candidate: string }>({ contractId: 0, user: { username: '', usermail: '', publickey: '', privatekey: '' }, candidate: "" })
     const [option1, setOption1] = useState<string>('0');
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [thankspageloading,setThankspageloading]=useState(false)
     let errorpoll:any=""
 
@@ -48,11 +46,7 @@ function Polling() {
         setLoading(false);
         if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true" ) {
             vote_detail.user.privatekey = await poll_question_and_details.userDetails.rpc.getPrivateKey();
-            console.log( vote_detail.user.privatekey ,"check")
-            console.log(vote_detail,"vote detail")
-            // setThankspageloading(true)
           }
-        //   setThankspageloading(true)
         fetch(process.env.REACT_APP_BACKEND + "/api/votingC_vote", {
             method: 'POST',
             body: JSON.stringify(
@@ -63,7 +57,6 @@ function Polling() {
                 'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
             }
         }).then((res) => res.json()).then(data => {
-            // setThankspageloading(true)
             console.log(thankspageloading,"thankspage")
             if(thankspageloading==false){
                 navigate('/thankyou')
@@ -130,27 +123,10 @@ function Polling() {
                             </div>
                         </div>
                     ) : (<>
-                        <Button variant="primary" disabled>
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                        <span className="visually-hidden">Loading...</span>
-                      </Button>{' '}
-                      <Button variant="primary" disabled>
-                        <Spinner
-                          as="span"
-                          animation="grow"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                        Loading...
-                      </Button>
-                    </>
+                        <div className='loader'>
+                  <Spinner animation="border" />
+                  </div>
+                  </>
                     )
                 }
             </>

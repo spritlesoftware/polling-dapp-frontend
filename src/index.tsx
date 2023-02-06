@@ -13,7 +13,6 @@ import Thankpage from './component/Thankpage';
 import Cards from './component/card';
 import Result from './component/Final';
 import Nobalance from './component/Nobalance';
-import View_results from './component/Result';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,7 +29,6 @@ root.render(
       <Route path='/card' element={<Cards/>}></Route>
       <Route path='/result' element={<Result/>}></Route>
       <Route path='/nobalance' element={<Nobalance/>}></Route>
-      {/* <Route path='/viewresults' element={<View_results/>}></Route> */}
     </Routes>
     </div>
     </BrowserRouter>

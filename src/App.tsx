@@ -204,7 +204,10 @@ function App() {
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
-    profile = user.profileImage
+    profile = user.profileImage;
+    if (profile)
+      profile = profile.replace("s96-c", "s32-c-mo");
+    
     poll_question_and_details.userDetails.profile = profile;
     poll_question_and_details.userDetails.username = user_name;
     poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";

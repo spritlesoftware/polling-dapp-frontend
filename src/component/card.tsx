@@ -3,7 +3,7 @@ import voteicon from "../assets/vvote.png"
 import React from "react";
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SpritleLogo from "../assets/spritle_logo.png";
 import { useEffect, useState, } from "react";
 import { Web3Auth } from "@web3auth/modal";
@@ -18,9 +18,7 @@ import Remove from "../assets/Close.png";
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import Spinner from 'react-bootstrap/Spinner';
 import toastr from "toastr";
-import { Nav, NavItem } from 'react-bootstrap';
-
-
+import Header from '../Header';
 
 function Cards() {
   const navigate = useNavigate();
@@ -28,70 +26,18 @@ function Cards() {
   const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number, expiring: string, statement: string }[]>([])
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string, balance: any, profile: any }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: poll_question_and_details.userDetails.balance , profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' })
+  const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string, balance: any, profile: any }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' })
   const [role_id, setRole_id] = useState<null | number>(0)
   const [question, setQuestion] = useState("")
   const [option, setOption] = useState<Record<string, string>>({ '0': '', '1': '' });
-  const [status, setStatus] = useState<number>(0)
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [notification,setNotification]=useState(false)
+  const [notification, setNotification] = useState(false)
   const { state } = useLocation()
-  const SideNav = () => {
-    return (
-      <Nav variant="pills" className="flex-column">
-        <Nav.Item>
-          <Nav.Link href="#">Link 1</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link href="#">Link 2</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link href="#">Link 3</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link href="#">Link 4</Nav.Link>
-        </Nav.Item>
-      </Nav>
-    );
-  };
-
-  const User_detail = () => {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    return (
-      <>
-        <img src={poll_question_and_details.userDetails.profile} className="profile-img" onClick={handleShow} alt="img" />
-        <Modal show={show} onHide={handleClose}>
-          <ModalHeader closeButton>
-            <Modal.Title>{detail.user.username}</Modal.Title>
-          </ModalHeader>
-          <ModalBody>
-            <p>
-              <img src={Email} className="Email" /> {detail.user.usermail}
-            </p>
-            <p>
-              <img src={Key} className="Key" /> {detail.user.publickey}
-            </p>
-            <p>
-              <img src={Amount} className="Email" /> {detail.user.balance}
-            </p>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </>
-    );
-  };
-
+  const [finalresult, setFinalresult] = useState<{ id: number, creator: string, result: string, statement: string }[]>([{ id: 0, creator: "", result: "no", statement: "" }])
+  const [expiry_load, setExpiry_load] = useState(true)
   useEffect(() => {
     const opt = Object.values(option)
     setDetail(prev => ({
@@ -137,36 +83,7 @@ function Cards() {
     myrole();
   }, []);
 
-  async function clk() {
 
-    setLoading(true);
-    console.log(loading,"loading")
-    fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
-      method: 'POST',
-      body: JSON.stringify(
-        detail
-      ),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
-      }
-    }).then((res) => res.json()).then(data => {
-      setNotification(true)
-      setDetail(({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: 0, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' }))
-      setOption(({ '0': '', '1': '' }))
-      
-
-      if(notification==true){
-      toastr.options.positionClass = "toast-top-center";
-      toastr.success("Successfully created!")
-    
-      }
-    
-      myrole();
-   
-    }).catch(err => console.log(err));
-    handleClose()
-  }
 
   function AddRemoveInputField() {
     const [inputFields, setInputFields] = useState<{ option: string }[]>([]);
@@ -222,22 +139,143 @@ function Cards() {
         </div>
       </div>
     )
+  }
+
+  const User_detail = () => {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    return (
+      <>
+        <img crossOrigin="anonymous" src={poll_question_and_details.userDetails.profile} className="profile-img" onClick={handleShow} alt="img" />
+        <Modal show={show} onHide={handleClose}>
+          <ModalHeader closeButton>
+            <Modal.Title>{detail.user.username}</Modal.Title>
+          </ModalHeader>
+          <ModalBody>
+            <p>
+              <img src={Email} className="Email" /> {detail.user.usermail}
+            </p>
+            <p>
+              <img src={Key} className="Key" /> {detail.user.publickey}
+            </p>
+            <p>
+              <img src={Amount} className="Email" /> {poll_question_and_details.userDetails.balance}
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="btn btn-primary" onClick={handleClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </>
+    );
+  };
+  const handleclick1 = (elements: any) => {
+    navigate('/result', { state: { winner: elements.result } })
+  }
+
+  function Expired_poll() {
+    fetch(process.env.REACT_APP_BACKEND + "/api/expiredPolls", {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
+      }
+    }).then(async (res) => {
+      await res.json().then(async (element) => {
+        setFinalresult(element)
+        setExpiry_load(false)
+
+      }
+      )
+    }).catch(err => console.log(err));
 
   }
 
+  function View() {
+    // Expired_poll();
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    function handleShow() {
+      setShow(true);
+      Expired_poll()
+    }
+
+    return (
+      <><Button className='btn btn-primary view_results' onClick={handleShow}>Results</Button>
+        <Modal show={show} onHide={handleClose}>
+          <ModalHeader closeButton>
+            <Modal.Title>Results</Modal.Title>
+          </ModalHeader>
+          <ModalBody>
+
+            {expiry_load ? (
+              <div className='loader'>
+                <Spinner animation="border" />
+              </div>
+            ) : (finalresult.map((elements, index) => {
+              return (
+                <>
+                  <div onClick={() => { handleclick1(elements) }}>
+                    <div>{elements.statement}</div>
+                  </div>
+                </>
+              )
+            }))}
+
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="btn btn-primary" onClick={handleClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </>
+    );
+  }
+
   function Create_poll() {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    function Save() {
+
+      setLoading(true);
+      fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
+        method: 'POST',
+        body: JSON.stringify(
+          detail
+        ),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
+        }
+      }).then((res) => res.json()).then(data => {
+        setDetail(({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' }))
+        setOption(({ '0': '', '1': '' }))
+        setNotification(true)
+
+
+        if (notification == true) {
+          toastr.options.positionClass = "toast-top-center";
+          toastr.success("Successfully created!")
+        }
+
+        myrole();
+
+      }).catch(err => console.log(err));
+      handleClose();
+    }
 
     return (
       <>
         {
           role_id === 1 &&
-          (<Button variant="primary" className="createbtn" onClick={handleShow}>
-            Create Poll
-          </Button>)
-        }
-        {
-          role_id !== 1 &&
-          (<p></p>)
+          (<Button className='btn btn-primary createbtn' onClick={handleShow}>Create Poll</Button>)
         }
 
         <Modal show={show} onHide={handleClose}>
@@ -257,7 +295,7 @@ function Cards() {
             {AddRemoveInputField()}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={clk}>
+            <Button variant="primary" onClick={Save}>
               Save
             </Button>
           </Modal.Footer>
@@ -266,6 +304,7 @@ function Cards() {
     );
 
   }
+
 
   const [alert, setAlert] = useState({
     header: 'header',
@@ -337,35 +376,33 @@ function Cards() {
     onShowAlert('success', privateKey, "Private Key");
   };
 
-  const handleclick = (element: any) => {
+  const handleclick = (elements: any) => {
     if (detail.user.balance <= 0) {
       navigate('/nobalance')
     }
-    else if (element.voted || element.creator == poll_question_and_details.userDetails.usermail) {
-      navigate('/result', { state: { id: element.id, date: element.expiring,role_id:role_id ,creator:element.creator }})
+    else if (elements.voted || elements.creator == poll_question_and_details.userDetails.usermail) {
+      navigate('/result', { state: { id: elements.id, date: elements.expiring, role_id: role_id, creator: elements.creator } })
     }
-
     else {
-      navigate('/pole', { state: { id: element.id, date: element.expiring } })
+      navigate('/pole', { state: { id: elements.id, date: elements.expiring } })
     }
   }
-function View_resultpage(){
-  navigate('/viewresults')
-}
+
   return (
     <div>
       <div>
         <div className="row  cards1">
           <div className="col-lg-7 first">
-            <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo1" />
+            <Header />
           </div>
-          <div className="col-lg-3 logout-button">
-           
+          <div className="col-lg-2">
             {Create_poll()}
-            <button className='btn btn-primary view_results' onClick={View_resultpage}>View Results</button>
           </div>
-          <div className="col-lg-2 buttons">
-            <button onClick={logout} className="btn btn-primary logout-test">Logout</button>
+          <div className="col-lg-1">
+            {View()}
+          </div>
+          <div className="col-lg-2">
+            <button onClick={logout} className="btn btn-primary">Logout</button>
             {User_detail()}
           </div>
         </div>
@@ -374,7 +411,9 @@ function View_resultpage(){
             <div className="row">
               {
                 loading ? (
-                  <Spinner animation="border" />
+                  <div className='loader'>
+                    <Spinner animation="border" />
+                  </div>
                 ) : (
                   resuse.map((element, id) => {
                     return (
@@ -388,9 +427,10 @@ function View_resultpage(){
                                   <h6 className="mb-0"></h6> <span>Expiring on: {element.expiring}</span>
                                 </div>
                               </div>
-                              <div className="badge">    <span style={{
-        color: element.voted ? 'red' : (element.creator  ===  poll_question_and_details.userDetails.usermail ? 'green' : 'blue')
-      }}>{(element.voted == true) && "Voted" || ((element.creator == poll_question_and_details.userDetails.usermail) && "Owner" || "Vote")}</span> </div>
+                              <div className="badge">
+                                <span style={{
+                                  color: element.voted ? 'red' : (element.creator === poll_question_and_details.userDetails.usermail ? 'green' : 'blue')
+                                }}>{(element.voted == true) && "Voted" || ((element.creator == poll_question_and_details.userDetails.usermail) && "Owner" || "Vote")}</span> </div>
                             </div>
                             <div className="mt-5 ">   <h6 className="heading ">{element.statement}</h6>
                               <p ></p>
@@ -400,7 +440,6 @@ function View_resultpage(){
                               </div>
                             </div>
                           </div>
-                          <p></p>
                         </div>
                       </div>
                     )

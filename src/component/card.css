@@ -121,8 +121,8 @@
     margin-left: -5%;
 }
 
-.logout-test {
-    margin-left: 20%;
+.logout-card {
+    margin-left: 12%;
     /* margin-top: 6%; */
 
 
@@ -145,16 +145,15 @@
 }
 
 .profile-img {
-    margin-left: 6%;
+    margin-left: 11%;
     border: aliceblue;
     border-radius: 79px;
     width: 18%;
 
 }
+
 .createbtn {
-
-    margin-left: 7%;
-
+    margin-left: 42%;
 }
 
 .cards1 {
@@ -163,17 +162,30 @@
     justify-content: center;
     align-items: center
 }
+
 .toast-top-center {
     top: 50px;
     right: 0;
     width: 100%;
-  }
-  
-  .toast-success {
+}
+
+.toast-success {
     background-color: #007bff;
     color: #fff;
-  }
-  .view_results {
-    margin-left:10%
-  }
-  
+}
+
+.view_results {
+    margin-left: 9%
+}
+
+.sidebar {
+    background-color: lightblue !important;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    margin-top: 2%;
+}

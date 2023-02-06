@@ -6,6 +6,7 @@ import SpritleLogo from "../assets/spritle_logo.png"
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
 import { useLocation } from "react-router-dom";
+import Header from "../Header";
 
 function Thankpage() {
     var navigate = useNavigate()
@@ -23,7 +24,7 @@ function Thankpage() {
         <>
             <div className="row">
                 <div className="col-lg-6 first">
-                    <img src={SpritleLogo} alt="spritlelogo" className="spritle-logo-polling" />
+                    <Header />
                 </div>
                 <div className="col-lg-6">
                     <button onClick={logout} className="btn btn-primary logout-polling">Logout</button>
