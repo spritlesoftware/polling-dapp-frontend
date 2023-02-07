@@ -5,7 +5,6 @@ const Header = () => {
     return (
       <header>
         <img src={Spritle} alt="Spritle" className="spritle" />
-     
       </header>
     );
   };

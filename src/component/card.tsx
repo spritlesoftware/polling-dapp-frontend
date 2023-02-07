@@ -36,7 +36,7 @@ function Cards() {
   const handleShow = () => setShow(true);
   const [notification, setNotification] = useState(false)
   const { state } = useLocation()
-  const [finalresult, setFinalresult] = useState<{ id: number, creator: string, result: string, statement: string }[]>([{ id: 0, creator: "", result: "no", statement: "" }])
+ 
   const [expiry_load, setExpiry_load] = useState(true)
   useEffect(() => {
     const opt = Object.values(option)
@@ -126,7 +126,7 @@ function Cards() {
                       </div>
                     </div>
                     <div className="col">
-                      {<img src={Remove} alt="spritlelogo" onClick={removeInputFields} className="remove" />}
+                      {<img src={Remove} alt="remove" onClick={removeInputFields} className="remove" />}
                     </div>
                   </div>
                 )
@@ -178,63 +178,8 @@ function Cards() {
   }
 
   function Expired_poll() {
-    fetch(process.env.REACT_APP_BACKEND + "/api/expiredPolls", {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
-      }
-    }).then(async (res) => {
-      await res.json().then(async (element) => {
-        setFinalresult(element)
-        setExpiry_load(false)
+    navigate('/expired')
 
-      }
-      )
-    }).catch(err => console.log(err));
-
-  }
-
-  function View() {
-    // Expired_poll();
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    function handleShow() {
-      setShow(true);
-      Expired_poll()
-    }
-
-    return (
-      <><Button className='btn btn-primary view_results' onClick={handleShow}>Results</Button>
-        <Modal show={show} onHide={handleClose}>
-          <ModalHeader closeButton>
-            <Modal.Title>Results</Modal.Title>
-          </ModalHeader>
-          <ModalBody>
-
-            {expiry_load ? (
-              <div className='loader'>
-                <Spinner animation="border" />
-              </div>
-            ) : (finalresult.map((elements, index) => {
-              return (
-                <>
-                  <div onClick={() => { handleclick1(elements) }}>
-                    <div>{elements.statement}</div>
-                  </div>
-                </>
-              )
-            }))}
-
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="btn btn-primary" onClick={handleClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </>
-    );
   }
 
   function Create_poll() {
@@ -377,7 +322,7 @@ function Cards() {
   };
 
   const handleclick = (elements: any) => {
-    if (detail.user.balance <= 0) {
+    if (poll_question_and_details.userDetails.balance <= 0) {
       navigate('/nobalance')
     }
     else if (elements.voted || elements.creator == poll_question_and_details.userDetails.usermail) {
@@ -392,17 +337,15 @@ function Cards() {
     <div>
       <div>
         <div className="row  cards1">
-          <div className="col-lg-7 first">
+          <div className="col-lg-6 first">
             <Header />
           </div>
           <div className="col-lg-2">
             {Create_poll()}
           </div>
-          <div className="col-lg-1">
-            {View()}
-          </div>
-          <div className="col-lg-2">
-            <button onClick={logout} className="btn btn-primary">Logout</button>
+          <div className="col-lg-4">
+            <Button className='btn btn-primary' onClick={Expired_poll}>Expired Poll</Button>
+            <button onClick={logout} className="btn btn-primary card-logout">Logout</button>
             {User_detail()}
           </div>
         </div>

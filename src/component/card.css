@@ -145,10 +145,10 @@
 }
 
 .profile-img {
-    margin-left: 11%;
+    margin-left: 6%;
     border: aliceblue;
     border-radius: 79px;
-    width: 18%;
+    width: 10%;
 
 }
 
@@ -188,4 +188,9 @@
     align-items: center;
     height: 50vh;
     margin-top: 2%;
+}
+
+.card-logout {
+    width: 30%;
+    margin-left: 7%;
 }

@@ -13,6 +13,7 @@ import Thankpage from './component/Thankpage';
 import Cards from './component/card';
 import Result from './component/Final';
 import Nobalance from './component/Nobalance';
+import Expired_polls from './Expired_polls';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,6 +30,7 @@ root.render(
       <Route path='/card' element={<Cards/>}></Route>
       <Route path='/result' element={<Result/>}></Route>
       <Route path='/nobalance' element={<Nobalance/>}></Route>
+      <Route path='/expired' element={<Expired_polls/>}></Route>
     </Routes>
     </div>
     </BrowserRouter>
