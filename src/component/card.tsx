@@ -3,12 +3,8 @@ import voteicon from "../assets/vvote.png"
 import React from "react";
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
-import { useLocation, useNavigate } from "react-router-dom";
-import SpritleLogo from "../assets/spritle_logo.png";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, } from "react";
-import { Web3Auth } from "@web3auth/modal";
-import { SafeEventEmitterProvider } from "@web3auth/base";
-import RPC from "../web3RPC";
 import Amount from '../assets/Amount1.png'
 import Email from '../assets/Email.png'
 import Key from '../assets/Key.png'
@@ -17,27 +13,24 @@ import Form from 'react-bootstrap/Form';
 import Remove from "../assets/Close.png";
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import Spinner from 'react-bootstrap/Spinner';
-import toastr from "toastr";
-import Header from '../Header';
+import Header from './Header';
+import { useForm } from 'react-hook-form';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Cards() {
   const navigate = useNavigate();
   const poll_question_and_details = useContext(PollingContext);
-  const [resuse, setResuse] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number, expiring: string, statement: string }[]>([])
-  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
-  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
+  const [card_detail, setCard_detail] = useState<{ id: number, createdAt: string, creator: string, voted: boolean, votesCount: number, expiring: string, statement: string }[]>([])
   const [detail, setDetail] = useState<{ user: { username: string, usermail: string, publickey: string, privatekey: string, balance: any, profile: any }, statement: string, candidates: string[], expiring: string }>({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' })
   const [role_id, setRole_id] = useState<null | number>(0)
   const [question, setQuestion] = useState("")
   const [option, setOption] = useState<Record<string, string>>({ '0': '', '1': '' });
   const [loading, setLoading] = useState(true);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [notification, setNotification] = useState(false)
-  const { state } = useLocation()
- 
-  const [expiry_load, setExpiry_load] = useState(true)
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [error, setError] = useState('');
+
   useEffect(() => {
     const opt = Object.values(option)
     setDetail(prev => ({
@@ -46,9 +39,8 @@ function Cards() {
   }, [option])
 
   useEffect(() => {
-    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: poll_question_and_details.userDetails.publickey, privatekey: poll_question_and_details.userDetails.privatekey, balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: question, candidates: [], expiring: "" })
+    setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: poll_question_and_details.userDetails.publickey, privatekey: poll_question_and_details.userDetails.privatekey, balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: "" })
   }, [])
-  const length: number = resuse.length
 
   const myrole = async () => {
     if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true") {
@@ -73,36 +65,34 @@ function Cards() {
       .then(res => res.json())
       .then(data => {
         setRole_id(data.role_id);
-        setResuse(data.polls);
+        setCard_detail(data.polls);
         setLoading(false);
+        if (detail.statement) {
+          setNotification(true);
+        }
       })
       .catch(err => console.log(err));
+
   }
 
   useEffect(() => {
     myrole();
   }, []);
 
-
-
   function AddRemoveInputField() {
+
     const [inputFields, setInputFields] = useState<{ option: string }[]>([]);
     const addInputField = () => {
       setInputFields([...inputFields, {
         option: '',
       }])
     }
+
     const removeInputFields = (index: any) => {
       const rows = [...inputFields];
       rows.splice(index, 1);
       setInputFields(rows);
       setOption(prev => ({}))
-
-    }
-    const handleChange = (index: number, name: any, evnt: any) => {
-      const { name: any, value } = evnt.target;
-      const list = [...inputFields];
-      setInputFields(list);
     }
 
     return (
@@ -113,8 +103,6 @@ function Cards() {
               <div className="row">
               </div>
             </div>
-            <input type="text" name="option" className="form-control option-one" placeholder="Option " value={option['0']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '0': e.target.value })))} />
-            <input type="text" name="option" className="form-control option-one" placeholder="Option " value={option['1']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '1': e.target.value })))} />
             {
               inputFields.map((data, index) => {
                 const idx = index + 2
@@ -142,13 +130,14 @@ function Cards() {
   }
 
   const User_detail = () => {
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     return (
       <>
-        <img crossOrigin="anonymous" src={poll_question_and_details.userDetails.profile} className="profile-img" onClick={handleShow} alt="img" />
+        <img crossOrigin="anonymous" referrerPolicy="no-referrer" src={poll_question_and_details.userDetails.profile} className="profile-img" onClick={handleShow} alt="img" />
         <Modal show={show} onHide={handleClose}>
           <ModalHeader closeButton>
             <Modal.Title>{detail.user.username}</Modal.Title>
@@ -173,107 +162,102 @@ function Cards() {
       </>
     );
   };
-  const handleclick1 = (elements: any) => {
-    navigate('/result', { state: { winner: elements.result } })
-  }
 
   function Expired_poll() {
     navigate('/expired')
-
   }
 
   function Create_poll() {
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    function Save() {
+    function save() {
 
-      setLoading(true);
-      fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
-        method: 'POST',
-        body: JSON.stringify(
-          detail
-        ),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
-        }
-      }).then((res) => res.json()).then(data => {
-        setDetail(({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' }))
-        setOption(({ '0': '', '1': '' }))
-        setNotification(true)
+      if (detail.statement && detail.expiring && option['0'] && option['1']) {
+        setLoading(true);
+        fetch(process.env.REACT_APP_BACKEND + "/api/votingC_newPollDeploy", {
+          method: 'POST',
+          body: JSON.stringify(
+            detail
+          ),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
+          }
+        }).then((res) => res.json()).then(data => {
 
+          myrole();
 
-        if (notification == true) {
-          toastr.options.positionClass = "toast-top-center";
-          toastr.success("Successfully created!")
-        }
+          if (loading === false) {
+            toast.success("Poll successfully created!", {
+              position: toast.POSITION.TOP_CENTER
+            })
+          }
 
-        myrole();
+          setDetail(({ user: { username: '', usermail: '', publickey: '', privatekey: '', balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: '' }))
+          setOption(({ '0': '', '1': '' }))
+          setQuestion("")
 
-      }).catch(err => console.log(err));
-      handleClose();
+        }).catch(err =>
+          toast.error("Poll creation Failed!", {
+            position: toast.POSITION.TOP_CENTER
+          }))
+        handleClose();
+      }
     }
-
     return (
       <>
         {
           role_id === 1 &&
           (<Button className='btn btn-primary createbtn' onClick={handleShow}>Create Poll</Button>)
         }
+        <ToastContainer />
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Create Poll</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-
-            <Form>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                <Form.Control as="textarea" value={option.candidates} onChange={((e: any) => setQuestion(e.target.value))} className='text-area1' placeholder='Enter your question' rows={3} />
-              </Form.Group>
-            </Form>
             <div>
-              <input type="date" className='date' onChange={((e: any) => setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: poll_question_and_details.userDetails.publickey, privatekey: poll_question_and_details.userDetails.privatekey, balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: question, candidates: [], expiring: e.target.value }))} />
+              <Form onSubmit={(evt) => {
+                evt.preventDefault()
+                handleSubmit(data => console.log({ data }))
+                save()
+              }}>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                  <Form.Control as="textarea" required {...register} value={question} onChange={e => setQuestion(e.target.value)} className="text-area1" placeholder="Enter your question" rows={3} />
+                </Form.Group>
+                <input type="date" className="date" required {...register}
+                  value={detail.expiring} onChange={e => setDetail({
+                    user: {
+                      username: poll_question_and_details.userDetails.username,
+                      usermail: poll_question_and_details.userDetails.usermail,
+                      publickey: poll_question_and_details.userDetails.publickey,
+                      privatekey: poll_question_and_details.userDetails.privatekey,
+                      balance: poll_question_and_details.userDetails.balance,
+                      profile: poll_question_and_details.userDetails.profile,
+                    },
+                    statement: question, candidates: [], expiring: e.target.value
+                  })
+                  }
+                />(Expiry date)
+                <input type="text" className="form-control option-one" placeholder="Option " required {...register} value={option['0']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '0': e.target.value })))} />
+                <input type="text" className="form-control option-two" placeholder="Option " required {...register} value={option['1']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '1': e.target.value })))} />
+                {AddRemoveInputField()}
+                <ModalFooter>
+                  <Button type='submit' variant="primary" onClick={(evt) => { }}>
+                    Save
+                  </Button>
+                </ModalFooter>
+              </Form>
             </div>
-            {AddRemoveInputField()}
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" onClick={Save}>
-              Save
-            </Button>
-          </Modal.Footer>
         </Modal>
       </>
     );
 
-  }
-
-
-  const [alert, setAlert] = useState({
-    header: 'header',
-    type: 'error',
-    text: 'This is a alert message',
-    show: false
-  })
-
-  function onCloseAlert() {
-    setAlert({
-      header: '',
-      type: '',
-      text: '',
-      show: false
-    })
-  }
-
-  function onShowAlert(type: string, val: string, _header: string) {
-    setAlert({
-      header: _header,
-      type: type,
-      text: val,
-      show: true
-    })
   }
 
   const logout = async () => {
@@ -281,56 +265,24 @@ function Cards() {
       localStorage.removeItem('openlogin_store');
       localStorage.removeItem('Web3Auth-cachedAdapter');
       navigate('/');
+      // window.location.reload();
     } catch (err) { console.log(err) };
   };
 
-  const getChainId = async (_provider: SafeEventEmitterProvider) => {
-    const rpc = new RPC(_provider);
-    const chainId = await rpc.getChainId();
-    onShowAlert('success', chainId, "Chain-ID");
-  };
-
-  const getAccounts = async (_provider: SafeEventEmitterProvider) => {
-    const rpc = new RPC(_provider);
-    const address = await rpc.getAccounts();
-    onShowAlert('success', String(address), "Public Address");
-  };
-
-  const getBalance = async (_provider: SafeEventEmitterProvider) => {
-    const rpc = new RPC(_provider);
-    const balance = await rpc.getBalance();
-    onShowAlert('success', balance, "Balance");
-
-  };
-
-  const sendTransaction = async (_provider: SafeEventEmitterProvider) => {
-    const rpc = new RPC(_provider);
-    const receipt = await rpc.sendTransaction();
-    console.log(receipt);
-  };
-
-  const signMessage = async (_provider: SafeEventEmitterProvider) => {
-    const rpc = new RPC(_provider);
-    const signedMessage = await rpc.signMessage("helloworld msg", "mypwd");
-    onShowAlert('success', "{msg: \"helloworld msg\", password: \"mypwd\"} is: " + signedMessage, "SignedMessage for");
-  };
-
-  const getPrivatekey = async (_provider: SafeEventEmitterProvider) => {
-    const rpc = new RPC(_provider);
-    const privateKey = await rpc.getPrivateKey();
-    onShowAlert('success', privateKey, "Private Key");
-  };
-
   const handleclick = (elements: any) => {
-    if (poll_question_and_details.userDetails.balance <= 0) {
+
+    if (poll_question_and_details.userDetails.balance <= 0 && process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true" ) {
       navigate('/nobalance')
     }
+
     else if (elements.voted || elements.creator == poll_question_and_details.userDetails.usermail) {
       navigate('/result', { state: { id: elements.id, date: elements.expiring, role_id: role_id, creator: elements.creator } })
     }
+
     else {
       navigate('/pole', { state: { id: elements.id, date: elements.expiring } })
     }
+
   }
 
   return (
@@ -354,11 +306,12 @@ function Cards() {
             <div className="row">
               {
                 loading ? (
+
                   <div className='loader'>
-                    <Spinner animation="border" />
+                    <Spinner animation="border" /> Loading...
                   </div>
                 ) : (
-                  resuse.map((element, id) => {
+                  card_detail.map((element, id) => {
                     return (
                       <div className='col-lg-4' key={id}>
                         <div className="card p-3 mb-2 card3 "  >
@@ -390,7 +343,7 @@ function Cards() {
                 )
               }
               {
-                resuse == null && (
+                card_detail == null && (
                   <center><b>You have not signed in</b></center>
                 )
               }

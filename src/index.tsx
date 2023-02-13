@@ -13,7 +13,7 @@ import Thankpage from './component/Thankpage';
 import Cards from './component/card';
 import Result from './component/Final';
 import Nobalance from './component/Nobalance';
-import Expired_polls from './Expired_polls';
+import Expired_polls from './component/Expired_polls';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

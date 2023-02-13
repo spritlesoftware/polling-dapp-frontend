@@ -1,0 +1,50 @@
+.scroll {
+    overflow-y: scroll;
+    max-height: 463px;
+  }
+ .result-img{
+    width: 39%
+ }
+ .select2 {
+   justify-content: center;
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+}
+.thank-you {
+   margin-left: 36%;
+}
+
+.left{
+   justify-content: center;
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+}
+.left-content{
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.item-color-1 {
+   color: blue;
+ }
+ 
+ .item-color-2 {
+   color: red;
+ }
+ 
+ .item-color-3 {
+   color: green;
+ }.statement {
+   cursor: pointer;
+   padding: 10px;
+   border-radius: 4px;
+   transition: background-color 0.2s ease-in-out;
+ }
+ 
+ .statement:hover {
+   background-color: #bebaba !important;
+ }

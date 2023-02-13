@@ -1,5 +1,5 @@
 import React from "react";
-import Spritle from './assets/spritle_logo.png'
+import Spritle from '../assets/spritle_logo.png'
 import './Header.css'
 const Header = () => {
     return (

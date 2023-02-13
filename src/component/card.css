@@ -70,21 +70,25 @@
 
 .add-options {
     margin-top: 5%;
-    margin-left: 8%;
+    margin-left: -4%;
 }
 
 .option-one {
-    margin-left: 7%;
+    /* margin-left: 7%; */
     margin-bottom: 6%;
+}
+.option-two {
+    /* margin-left: 7%; */
+    margin-bottom: 2%;
 }
 
 .new-option {
     width: 220%;
-    margin-left: 15%;
+    margin-left: -10%;
 }
 
 .remove {
-    margin-left: 129%;
+    margin-left: 104%;
 }
 
 .card3 {
@@ -112,8 +116,8 @@
 }
 
 .date {
-    margin-left: 7%;
-    margin-bottom: 4%;
+    margin-bottom: 6%;
+    margin-top: 2%;
 }
 
 .buttons {
@@ -193,4 +197,14 @@
 .card-logout {
     width: 30%;
     margin-left: 7%;
+}
+.text-area1:hover {
+    cursor: pointer;
+}
+.toastr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    margin-top: 2%;
 }

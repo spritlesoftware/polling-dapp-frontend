@@ -1,16 +1,13 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import SpritleLogo from "../assets/spritle_logo.png"
 import Announcement from "../assets/Jan-Success_1.jpg"
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
 import Thumbsup from "../assets/transparantresult.png"
 import { useNavigate } from "react-router-dom";
 import './Final.css';
-import Spinner from 'react-bootstrap/Spinner';
-import Button from 'react-bootstrap/Button';
-import Header from "../Header";
+import Header from "./Header";
 
 function Result() {
     var navigate = useNavigate()
@@ -18,10 +15,8 @@ function Result() {
     const [vals, setVals] = useState(null)
     const [winner, setWinner] = useState()
     const contractId = location.state.id;
-    const val: any = "0"
     const poll_question_and_details = useContext(PollingContext);
     const poll_question = useContext(PollingContext);
-    // const [loading, setLoading] = useState(true)
     const [announce, setAnnounce] = useState<{ user: { privatekey: string }, contractId: number }>({ user: { privatekey: poll_question_and_details.userDetails.privatekey }, contractId: contractId })
     const date = location.state.date
     const role_id = location.state.role_id
@@ -49,16 +44,17 @@ function Result() {
             })
             .catch(err => console.log(err));
     }
+
     const logout = async () => {
         try {
             localStorage.removeItem('openlogin_store');
             localStorage.removeItem('Web3Auth-cachedAdapter');
             navigate('/');
+            window.location.reload();
         } catch (err) { console.log(err) };
     };
 
     useEffect(() => {
-
         final_result()
         if (oldresult !== undefined) {
             setVals(oldresult)
@@ -69,7 +65,6 @@ function Result() {
     function final_result() {
         fetch(process.env.REACT_APP_BACKEND + "/api/test-collections/" + contractId + "?fields[0]=result", {
             method: 'GET',
-
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN

@@ -6,7 +6,7 @@ import SpritleLogo from "../assets/spritle_logo.png"
 import { useContext } from "react";
 import { PollingContext } from "../Listcontext/listcontext";
 import { useLocation } from "react-router-dom";
-import Header from "../Header";
+import Header from "./Header";
 
 function Thankpage() {
     var navigate = useNavigate()
@@ -18,6 +18,7 @@ function Thankpage() {
             localStorage.removeItem('openlogin_store');
             localStorage.removeItem('Web3Auth-cachedAdapter');
             navigate('/');
+            window.location.reload();
         } catch (err) { console.log(err) };
     };
     return (

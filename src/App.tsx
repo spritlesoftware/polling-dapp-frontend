@@ -204,7 +204,7 @@ function App() {
 
     const user = await web3auth.getUserInfo();
     user_name = user.name ? user.name : "-";
-    profile = user.profileImage;
+   profile = user.profileImage;
     if (profile)
       profile = profile.replace("s96-c", "s32-c-mo");
     
@@ -212,7 +212,6 @@ function App() {
     poll_question_and_details.userDetails.username = user_name;
     poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
     poll_question_and_details.userDetails.w3auth = web3auth;
-
 
     if (web3authProvider) {
       const rpc = new RPC(web3authProvider);
@@ -236,6 +235,7 @@ function App() {
         localStorage.removeItem('openlogin_store');
         localStorage.removeItem('Web3Auth-cachedAdapter');
         navigate('/');
+        window.location.reload();
     } catch (err) { console.log(err) };
 };
 

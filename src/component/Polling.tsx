@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import SpritleLogo from "../assets/spritle_logo.png";
 import { useEffect } from "react";
 import Spinner from 'react-bootstrap/Spinner';
-import Button from 'react-bootstrap/Button';
 
 function Polling() {
     const navigate = useNavigate();
@@ -23,14 +22,12 @@ function Polling() {
     let errorpoll:any=""
 
     const thank = (() => {
-        submit()
-       
+        submit()  
     })
 
     useEffect(() => {
         const opt = option1
         setVote_detail({ contractId: id, user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: "", privatekey: "" }, candidate: option1 })
-        console.log(option1, "opt************")
     }, [option1])
 
     const id = location.state.id
@@ -39,6 +36,7 @@ function Polling() {
             localStorage.removeItem('openlogin_store');
             localStorage.removeItem('Web3Auth-cachedAdapter');
             navigate('/');
+            window.location.reload();
         } catch(err) {console.log(err)};
     };
 
@@ -58,12 +56,13 @@ function Polling() {
             }
         }).then((res) => res.json()).then(data => {
             console.log(thankspageloading,"thankspage")
-            if(thankspageloading==false){
-                navigate('/thankyou')
-                }
+            setThankspageloading(true)
+         
         }).catch(err => console.log(err));
     }
-
+    if(thankspageloading==true){
+        navigate('/thankyou')
+        }
     useEffect(() => {
         fetch(process.env.REACT_APP_BACKEND + "/api/getPollDetails", {
             method: 'POST',
@@ -86,11 +85,8 @@ function Polling() {
 
     const length1 = polling?.candidates.length
     function Text() {
-        console.log({ polling })
-        console.log(length1)
 
         return (
-
             <>
                 {
                     loading ? (
@@ -124,14 +120,16 @@ function Polling() {
                         </div>
                     ) : (<>
                         <div className='loader'>
-                  <Spinner animation="border" />
+                  <Spinner animation="border" /> Please wait...
                   </div>
                   </>
                     )
                 }
             </>
         )
+
     }
+
     return (
         <div>
             <div className="container-fluid">
@@ -147,6 +145,7 @@ function Polling() {
             </div>
         </div>
     )
+
 }
 
 export default Polling
