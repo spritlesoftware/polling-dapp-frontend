@@ -18,11 +18,6 @@ import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Web3Auth } from "@web3auth/modal";
-import { WALLET_ADAPTERS, CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-
-import RPC from "../web3RPC"
 function Cards() {
   const navigate = useNavigate();
   const poll_question_and_details = useContext(PollingContext);
@@ -34,44 +29,15 @@ function Cards() {
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
-  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
-  var user_name = "";
-  var profile: any = "";
-  const login = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const web3authProvider = await web3auth.connect();
-    setProvider(web3authProvider);
-
-    const user = await web3auth.getUserInfo();
-    user_name = user.name ? user.name : "-";
-   profile = user.profileImage;
-    if (profile)
-      profile = profile.replace("s96-c", "s32-c-mo");
-    
-    poll_question_and_details.userDetails.profile = profile;
-    poll_question_and_details.userDetails.username = user_name;
-    poll_question_and_details.userDetails.usermail = user.email ? user.email : "-";
-    poll_question_and_details.userDetails.w3auth = web3auth;
-
-    if (web3authProvider) {
-      const rpc = new RPC(web3authProvider);
-      var balance = await rpc.getBalance();
-      poll_question_and_details.userDetails.rpc = rpc;
-      navigate('/card', { state: { imageUrl: poll_question_and_details.userDetails.profile, accessToken: user.oAuthAccessToken } })
-    }
-  };
-
+  const [error, setError] = useState('');
+  
   useEffect(() => {
     const opt = Object.values(option)
     setDetail(prev => ({
       ...prev, candidates: opt
     }))
   }, [option])
-
+  
   useEffect(() => {
     setDetail({ user: { username: poll_question_and_details.userDetails.username, usermail: poll_question_and_details.userDetails.usermail, publickey: poll_question_and_details.userDetails.publickey, privatekey: poll_question_and_details.userDetails.privatekey, balance: poll_question_and_details.userDetails.balance, profile: poll_question_and_details.userDetails.profile }, statement: '', candidates: [], expiring: "" })
   }, [])
@@ -106,7 +72,6 @@ function Cards() {
         }
       })
       .catch(err => console.log(err));
-
   }
 
   useEffect(() => {
@@ -248,7 +213,6 @@ function Cards() {
           (<Button className='btn btn-primary createbtn' onClick={handleShow}>Create Poll</Button>)
         }
         <ToastContainer />
-
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Create Poll</Modal.Title>
@@ -299,7 +263,7 @@ function Cards() {
       localStorage.removeItem('openlogin_store');
       localStorage.removeItem('Web3Auth-cachedAdapter');
       navigate('/');
-      window.location.reload();
+       window.location.reload();
     } catch (err) { console.log(err) };
   };
 
@@ -377,7 +341,7 @@ function Cards() {
                 )
               }
               {
-                card_detail == null && (
+          card_detail == null && (
                   <center><b>You have not signed in</b></center>
                 )
               }

@@ -18,11 +18,11 @@ function Polling() {
     const [vote_detail, setVote_detail] = useState<{ contractId: number, user: { username: string, usermail: string, publickey: string, privatekey: string }, candidate: string }>({ contractId: 0, user: { username: '', usermail: '', publickey: '', privatekey: '' }, candidate: "" })
     const [option1, setOption1] = useState<string>('0');
     const [loading, setLoading] = useState(false)
-    const [thankspageloading,setThankspageloading]=useState(false)
-    let errorpoll:any=""
+    const [thankspageloading, setThankspageloading] = useState(false)
+    let errorpoll: any = ""
 
     const thank = (() => {
-        submit()  
+        submit()
     })
 
     useEffect(() => {
@@ -37,14 +37,14 @@ function Polling() {
             localStorage.removeItem('Web3Auth-cachedAdapter');
             navigate('/');
             window.location.reload();
-        } catch(err) {console.log(err)};
+        } catch (err) { console.log(err) };
     };
 
     const submit = async () => {
         setLoading(false);
-        if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true" ) {
+        if (process.env.REACT_APP_BLOCKCHAIN_ACCOUNT === "true") {
             vote_detail.user.privatekey = await poll_question_and_details.userDetails.rpc.getPrivateKey();
-          }
+        }
         fetch(process.env.REACT_APP_BACKEND + "/api/votingC_vote", {
             method: 'POST',
             body: JSON.stringify(
@@ -55,14 +55,15 @@ function Polling() {
                 'Authorization': 'Bearer ' + process.env.REACT_APP_BACKEND_TOKEN
             }
         }).then((res) => res.json()).then(data => {
-            console.log(thankspageloading,"thankspage")
+            console.log(thankspageloading, "thankspage")
             setThankspageloading(true)
-         
         }).catch(err => console.log(err));
     }
-    if(thankspageloading==true){
+
+    if (thankspageloading == true) {
         navigate('/thankyou')
-        }
+    }
+
     useEffect(() => {
         fetch(process.env.REACT_APP_BACKEND + "/api/getPollDetails", {
             method: 'POST',
@@ -80,12 +81,12 @@ function Polling() {
                 setLoading(true)
             }
             )
-        }).catch(err =>errorpoll=(err));
+        }).catch(err => errorpoll = (err));
     }, [])
 
     const length1 = polling?.candidates.length
-    function Text() {
 
+    function Text() {
         return (
             <>
                 {
@@ -120,14 +121,13 @@ function Polling() {
                         </div>
                     ) : (<>
                         <div className='loader'>
-                  <Spinner animation="border" /> Please wait...
-                  </div>
-                  </>
+                            <Spinner animation="border" /> Please wait...
+                        </div>
+                    </>
                     )
                 }
             </>
         )
-
     }
 
     return (
@@ -145,7 +145,6 @@ function Polling() {
             </div>
         </div>
     )
-
 }
 
 export default Polling
