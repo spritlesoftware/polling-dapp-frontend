@@ -269,6 +269,7 @@ form {
 .submit1 {
   margin-left: 43%;
   margin-top: 4%;
+  margin-bottom: 10%;
 }
 
 .login {
@@ -277,6 +278,7 @@ form {
   padding: 9%;
   flex-direction: column;
   justify-content: space-between;
+ 
 }
 
 .spritle-logo {

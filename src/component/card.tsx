@@ -222,7 +222,7 @@ function Cards() {
               <Form onSubmit={(evt) => {
                 evt.preventDefault()
                 handleSubmit(data => console.log({ data }))
-                save()
+             
               }}>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                   <Form.Control as="textarea" required {...register} value={question} onChange={e => setQuestion(e.target.value)} className="text-area1" placeholder="Enter your question" rows={3} />
@@ -245,7 +245,7 @@ function Cards() {
                 <input type="text" className="form-control option-two" placeholder="Option " required {...register} value={option['1']} onChange={((e: React.ChangeEvent<HTMLInputElement>) => setOption(prev => ({ ...prev, '1': e.target.value })))} />
                 {AddRemoveInputField()}
                 <ModalFooter>
-                  <Button type='submit' variant="primary" onClick={(evt) => { }}>
+                  <Button type='submit' variant="primary" onClick={(evt) => {save()}}>
                     Save
                   </Button>
                 </ModalFooter>
